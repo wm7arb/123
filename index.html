@@ -85,6 +85,30 @@
       background: #008bb8;
       box-shadow: 0 0 30px #00c3ff;
     }
+
+    /* Hide all lists by default */
+    .app-list {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .app-list div {
+      background: rgba(0, 0, 0, 0.6);
+      margin: 10px 0;
+      padding: 10px 30px;
+      border-radius: 10px;
+      font-size: 22px;
+      border: 2px solid #00c3ff;
+      box-shadow: 0 0 20px #00c3ff;
+      transition: 0.3s;
+    }
+
+    .app-list div:hover {
+      background: rgba(0, 70, 140, 0.8);
+      box-shadow: 0 0 30px #00c3ff;
+    }
   </style>
 </head>
 <body>
@@ -93,12 +117,45 @@
   <p>تحميل دلتا و كرنل و كوكودس</p>
 
   <div class="container">
-    <div class="card" onclick="window.open('https://shorturl.at/uICmd', '_blank')">تحميل دلتا</div>
-    <div class="card" onclick="window.open('https://shorturl.at/utlPE', '_blank')">تحميل كرنل</div>
-    <div class="card" onclick="window.open('https://shorturl.at/qQtXW', '_blank')">تحميل كوكودس</div>
+    <div class="card" onclick="toggleList('ios')">تطبيقات iOS</div>
+    <div class="card" onclick="toggleList('android')">تطبيقات Android</div>
+    <div class="card" onclick="toggleList('pc')">تطبيقات PC</div>
+  </div>
+
+  <!-- iOS Apps List -->
+  <div class="app-list" id="ios">
+    <div>هالك روبلوكس</div>
+    <div>فورت نايت</div>
+    <div>وأكثر</div>
+  </div>
+
+  <!-- Android Apps List -->
+  <div class="app-list" id="android">
+    <div>تطبيقات مميزة للأندرويد</div>
+    <div>هالك روبلوكس</div>
+    <div>فورت نايت</div>
+  </div>
+
+  <!-- PC Apps List -->
+  <div class="app-list" id="pc">
+    <div>هالك روبلوكس للكمبيوتر</div>
+    <div>فورت نايت للكمبيوتر</div>
   </div>
 
   <!-- Support Button -->
   <a href="https://discard.gg/crizix" class="support" target="_blank">دعم فني</a>
+
+  <script>
+    // Function to toggle the visibility of app lists
+    function toggleList(platform) {
+      // Hide all lists first
+      const allLists = document.querySelectorAll('.app-list');
+      allLists.forEach(list => list.style.display = 'none');
+      
+      // Show the clicked list
+      const selectedList = document.getElementById(platform);
+      selectedList.style.display = 'flex';
+    }
+  </script>
 </body>
 </html>
