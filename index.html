@@ -158,6 +158,30 @@
       margin-top: 20px;
     }
 
+    /* قائمة منسدلة */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #333;
+      min-width: 200px;
+      z-index: 1;
+      border-radius: 10px;
+    }
+
+    .dropdown-content a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #6e6e6e;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -167,60 +191,47 @@
   <h1>CRIZIX TOP</h1>
 
   <div class="container">
-    <!-- Buttons to toggle lists -->
-    <div class="button" id="iosButton" onclick="toggleList('ios')">تطبيقات ايفون</div>
-    <div class="button" id="androidButton" onclick="toggleList('android')">تطبيقات اندرويد</div>
-    <div class="button" id="pcButton" onclick="toggleList('pc')">تطبيقات بي سي</div>
+    <!-- زر تطبيقات ايفون -->
+    <div class="dropdown">
+      <button class="button">تطبيقات ايفون</button>
+      <div class="dropdown-content">
+        <a href="https://shorturl.at/uICmd">تحميل دلتا</a>
+        <a href="https://shorturl.at/utlPE">تحميل كرنل</a>
+        <a href="https://shorturl.at/qQtXW">تحميل كوكودس</a>
+      </div>
+    </div>
+
+    <!-- زر تطبيقات اندرويد -->
+    <div class="dropdown">
+      <button class="button">تطبيقات اندرويد</button>
+      <div class="dropdown-content">
+        <a href="#">للأسف، لا يوجد حالياً أي هاك</a>
+      </div>
+    </div>
+
+    <!-- زر تطبيقات بي سي -->
+    <div class="dropdown">
+      <button class="button">تطبيقات بي سي</button>
+      <div class="dropdown-content">
+        <a href="#">للأسف، لا يوجد حالياً أي هاك</a>
+      </div>
+    </div>
   </div>
 
-  <!-- Social Buttons (Discord and YouTube) -->
+  <!-- أزرار وسائل التواصل الاجتماعي -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" class="social-button" target="_blank">ديسكورد</a>
     <a href="https://youtube.com/@crizix1?si=xrED4AFIIoa1bxjR" class="social-button youtube" target="_blank">يوتيوب</a>
   </div>
 
-  <!-- ايفون Apps List -->
-  <div class="app-list" id="ios">
-    <div class="card" onclick="window.location.href='https://shorturl.at/uICmd'">تحميل دلتا</div>
-    <div class="card" onclick="window.location.href='https://shorturl.at/utlPE'">تحميل كرنل</div>
-    <div class="card" onclick="window.location.href='https://shorturl.at/qQtXW'">تحميل كوكودس</div>
-  </div>
-
-  <!-- اندرويد Apps List -->
-  <div class="app-list" id="android">
-    <div>للأسف، لا يوجد حالياً أي هاك</div>
-  </div>
-
-  <!-- بي سي Apps List -->
-  <div class="app-list" id="pc">
-    <div>للأسف، لا يوجد حالياً أي هاك</div>
-  </div>
-
   <script>
-    // Function to toggle the visibility of app lists
-    function toggleList(platform) {
-      // Hide all lists first
-      const allLists = document.querySelectorAll('.app-list');
-      allLists.forEach(list => list.style.display = 'none');
-      
-      // Show the clicked list
-      const selectedList = document.getElementById(platform);
-      selectedList.style.display = 'flex';
-    }
-
     // Toggle Language function
     function toggleLanguage() {
       let currentLang = document.querySelector('.language-toggle').textContent;
       if (currentLang === 'عربي') {
         document.querySelector('.language-toggle').textContent = 'English';
-        document.getElementById('iosButton').textContent = 'iPhone Apps';
-        document.getElementById('androidButton').textContent = 'Android Apps';
-        document.getElementById('pcButton').textContent = 'PC Apps';
       } else {
         document.querySelector('.language-toggle').textContent = 'عربي';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
       }
     }
   </script>
