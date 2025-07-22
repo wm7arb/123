@@ -145,9 +145,9 @@
 
   <div class="container">
     <!-- Buttons to toggle lists -->
-    <div class="button" onclick="toggleList('ios')">تطبيقات iPhone</div>
-    <div class="button" onclick="toggleList('android')">تطبيقات Android</div>
-    <div class="button" onclick="toggleList('pc')">تطبيقات PC</div>
+    <div class="button" id="iosButton" onclick="toggleList('ios')">تطبيقات iPhone</div>
+    <div class="button" id="androidButton" onclick="toggleList('android')">تطبيقات Android</div>
+    <div class="button" id="pcButton" onclick="toggleList('pc')">تطبيقات PC</div>
   </div>
 
   <!-- Social Buttons (Discord and YouTube) -->
@@ -193,6 +193,21 @@
         if (message) {
           message.textContent = 'للأسف، لا يوجد حالياً أي هاك';
         }
+      }
+
+      // Change button text according to the selected list
+      if (platform === 'ios') {
+        document.getElementById('iosButton').textContent = 'عرض تطبيقات iPhone';
+        document.getElementById('androidButton').textContent = 'تطبيقات Android';
+        document.getElementById('pcButton').textContent = 'تطبيقات PC';
+      } else if (platform === 'android') {
+        document.getElementById('androidButton').textContent = 'عرض تطبيقات Android';
+        document.getElementById('iosButton').textContent = 'تطبيقات iPhone';
+        document.getElementById('pcButton').textContent = 'تطبيقات PC';
+      } else if (platform === 'pc') {
+        document.getElementById('pcButton').textContent = 'عرض تطبيقات PC';
+        document.getElementById('androidButton').textContent = 'تطبيقات Android';
+        document.getElementById('iosButton').textContent = 'تطبيقات iPhone';
       }
     }
   </script>
