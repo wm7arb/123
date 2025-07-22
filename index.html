@@ -40,7 +40,6 @@
       box-shadow: 0 0 20px #6e6e6e;
     }
 
-    /* باقي الكود يظل كما هو */
     img.logo {
       width: 150px;
       height: 150px;
@@ -181,7 +180,7 @@
   </div>
 
   <!-- ايفون Apps List -->
-  <div class="container" id="ios">
+  <div class="container" id="ios" style="display: none;">
     <div class="card" onclick="window.location.href='https://shorturl.at/uICmd'">تحميل دلتا</div>
     <div class="card" onclick="window.location.href='https://shorturl.at/utlPE'">تحميل كرنل</div>
     <div class="card" onclick="window.location.href='https://shorturl.at/qQtXW'">تحميل كوكودس</div>
@@ -201,27 +200,12 @@
     // Function to toggle the visibility of app lists
     function toggleList(platform) {
       // Hide all lists first
-      const allLists = document.querySelectorAll('.app-list');
+      const allLists = document.querySelectorAll('.container');
       allLists.forEach(list => list.style.display = 'none');
       
       // Show the clicked list
       const selectedList = document.getElementById(platform);
       selectedList.style.display = 'flex';
-
-      // Change button text according to the selected list
-      if (platform === 'ios') {
-        document.getElementById('iosButton').textContent = 'عرض تطبيقات ايفون';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
-      } else if (platform === 'android') {
-        document.getElementById('androidButton').textContent = 'عرض تطبيقات اندرويد';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
-      } else if (platform === 'pc') {
-        document.getElementById('pcButton').textContent = 'عرض تطبيقات بي سي';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-      }
     }
 
     // Toggle Language function
