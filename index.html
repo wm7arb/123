@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -129,6 +129,14 @@
     .app-list a:hover {
       color: #6e6e6e;
     }
+
+    .message {
+      font-size: 24px;
+      color: #ff0000;
+      text-align: center;
+      margin-top: 20px;
+    }
+
   </style>
 </head>
 <body>
@@ -172,7 +180,10 @@
       const allLists = document.querySelectorAll('.app-list');
       allLists.forEach(list => list.style.display = 'none');
       
-      // Show the clicked list
+      // Hide message
+      document.getElementById('no-content-message').style.display = 'none';
+
+      // Show the clicked list or display the message if no content
       const selectedList = document.getElementById(platform);
       if (selectedList && selectedList.children.length > 0) {
         selectedList.style.display = 'flex';
