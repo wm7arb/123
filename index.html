@@ -2,12 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>CRIZIX</title>
+  <title>CRIZIX TOP</title>
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #000428, #004e92);
+      background: linear-gradient(135deg, #000428, #4e4e4e);
       background-attachment: fixed;
       background-size: cover;
       color: #ffffff;
@@ -24,69 +24,79 @@
       height: 150px;
       margin-bottom: 20px;
       border-radius: 50%;
-      box-shadow: 0 0 20px #00c3ff88;
+      box-shadow: 0 0 20px #6e6e6e;
     }
 
     h1 {
       font-size: 56px;
-      color: #00c3ff;
+      color: #6e6e6e;
       margin-bottom: 10px;
-      text-shadow: 0 0 12px #00c3ff;
-    }
-
-    p {
-      margin-bottom: 50px;
-      color: #dddddd;
-      font-size: 24px;
-      text-shadow: 0 0 5px #000;
+      text-shadow: 0 0 12px #6e6e6e;
     }
 
     .container {
       display: flex;
-      gap: 40px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 30px;
       justify-content: center;
     }
 
-    .card {
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid #00c3ff;
-      border-radius: 20px;
-      padding: 40px 60px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 28px;
-      box-shadow: 0 0 25px #00c3ff66;
-      backdrop-filter: blur(10px);
-      color: white;
-    }
-
-    .card:hover {
-      background: rgba(0, 70, 140, 0.8);
-      box-shadow: 0 0 40px #00c3ffcc;
-      transform: scale(1.07);
-    }
-
-    .support {
-      background: #00c3ff;
-      color: #ffffff;
-      font-size: 24px;
-      padding: 15px 40px;
-      margin-top: 30px;
+    .button {
+      background-color: #333;
+      border: 2px solid #6e6e6e;
       border-radius: 15px;
+      padding: 30px 60px;
+      font-size: 28px;
+      color: #ffffff;
       text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 0 10px #6e6e6e, 0 0 20px #6e6e6e;
+      text-transform: uppercase;
+      width: 250px;
+      margin: 10px;
+    }
+
+    .button:hover {
+      background-color: #6e6e6e;
+      color: #000000;
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #6e6e6e, 0 0 35px #6e6e6e;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .social-button {
+      background-color: #5865F2;
+      border-radius: 10px;
+      padding: 15px 40px;
+      font-size: 24px;
+      color: white;
       text-decoration: none;
+      text-align: center;
       display: inline-block;
-      box-shadow: 0 0 20px #00c3ff;
+      box-shadow: 0 0 10px #5865F2;
       transition: 0.3s;
     }
 
-    .support:hover {
-      background: #008bb8;
-      box-shadow: 0 0 30px #00c3ff;
+    .social-button:hover {
+      background-color: #4e55c4;
+      box-shadow: 0 0 20px #5865F2;
     }
 
-    /* Hide all lists by default */
+    .social-button.youtube {
+      background-color: #FF0000;
+    }
+
+    .social-button.youtube:hover {
+      background-color: #cc0000;
+      box-shadow: 0 0 20px #FF0000;
+    }
+
     .app-list {
       display: none;
       flex-direction: column;
@@ -97,53 +107,63 @@
     .app-list div {
       background: rgba(0, 0, 0, 0.6);
       margin: 10px 0;
-      padding: 10px 30px;
+      padding: 15px 40px;
       border-radius: 10px;
-      font-size: 22px;
-      border: 2px solid #00c3ff;
-      box-shadow: 0 0 20px #00c3ff;
+      font-size: 24px;
+      border: 2px solid #6e6e6e;
+      box-shadow: 0 0 20px #6e6e6e;
       transition: 0.3s;
     }
 
     .app-list div:hover {
       background: rgba(0, 70, 140, 0.8);
-      box-shadow: 0 0 30px #00c3ff;
+      box-shadow: 0 0 30px #6e6e6e;
+    }
+
+    .app-list a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 22px;
+    }
+
+    .app-list a:hover {
+      color: #6e6e6e;
     }
   </style>
 </head>
 <body>
-  <img src="logo.webp" alt="CRIZIX Logo" class="logo" />
-  <h1>CRIZIX</h1>
-  <p>تحميل دلتا و كرنل و كوكودس</p>
+  <img src="https://i.ibb.co/G4VnHWLZ/28aeecb32800.jpg" alt="CRIZIX Logo" class="logo" />
+  <h1>CRIZIX TOP</h1>
 
   <div class="container">
-    <div class="card" onclick="toggleList('ios')">تطبيقات iOS</div>
-    <div class="card" onclick="toggleList('android')">تطبيقات Android</div>
-    <div class="card" onclick="toggleList('pc')">تطبيقات PC</div>
+    <!-- Buttons to toggle lists -->
+    <div class="button" onclick="toggleList('ios')">تطبيقات iPhone</div>
+    <div class="button" onclick="toggleList('android')">تطبيقات Android</div>
+    <div class="button" onclick="toggleList('pc')">تطبيقات PC</div>
+  </div>
+
+  <!-- Social Buttons (Discord and YouTube) -->
+  <div class="social-buttons">
+    <a href="https://discord.gg/crizix" class="social-button" target="_blank">ديسكورد</a>
+    <a href="https://youtube.com/@crizix1?si=xrED4AFIIoa1bxjR" class="social-button youtube" target="_blank">يوتيوب</a>
   </div>
 
   <!-- iOS Apps List -->
   <div class="app-list" id="ios">
-    <div>هالك روبلوكس</div>
-    <div>فورت نايت</div>
-    <div>وأكثر</div>
+    <div><a href="https://shorturl.at/uICmd" target="_blank">تحميل كوكودس</a></div>
+    <div><a href="https://shorturl.at/utlPE" target="_blank">تحميل دلتا</a></div>
+    <div><a href="https://shorturl.at/qQtXW" target="_blank">تحميل كرنل</a></div>
   </div>
 
   <!-- Android Apps List -->
   <div class="app-list" id="android">
-    <div>تطبيقات مميزة للأندرويد</div>
-    <div>هالك روبلوكس</div>
-    <div>فورت نايت</div>
+    <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
 
   <!-- PC Apps List -->
   <div class="app-list" id="pc">
-    <div>هالك روبلوكس للكمبيوتر</div>
-    <div>فورت نايت للكمبيوتر</div>
+    <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
-
-  <!-- Support Button -->
-  <a href="https://discard.gg/crizix" class="support" target="_blank">دعم فني</a>
 
   <script>
     // Function to toggle the visibility of app lists
@@ -154,7 +174,15 @@
       
       // Show the clicked list
       const selectedList = document.getElementById(platform);
-      selectedList.style.display = 'flex';
+      if (selectedList && selectedList.children.length > 0) {
+        selectedList.style.display = 'flex';
+      } else {
+        selectedList.style.display = 'flex';
+        const message = selectedList.querySelector('div');
+        if (message) {
+          message.textContent = 'للأسف، لا يوجد حالياً أي هاك';
+        }
+      }
     }
   </script>
 </body>
