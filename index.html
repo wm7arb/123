@@ -19,6 +19,28 @@
       padding: 40px 20px;
     }
 
+    /* زر تغيير اللغة في الزاوية العلوية */
+    .language-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #333;
+      color: #fff;
+      border: 2px solid #6e6e6e;
+      border-radius: 15px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #6e6e6e;
+    }
+
+    .language-toggle:hover {
+      background-color: #6e6e6e;
+      color: #000;
+      box-shadow: 0 0 20px #6e6e6e;
+    }
+
+    /* باقي الكود يظل كما هو */
     img.logo {
       width: 150px;
       height: 150px;
@@ -140,6 +162,8 @@
   </style>
 </head>
 <body>
+  <button class="language-toggle" onclick="toggleLanguage()">عربي</button>
+
   <img src="https://i.ibb.co/G4VnHWLZ/28aeecb32800.jpg" alt="CRIZIX Logo" class="logo" />
   <h1>CRIZIX TOP</h1>
 
@@ -197,6 +221,22 @@
         document.getElementById('pcButton').textContent = 'عرض تطبيقات بي سي';
         document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
         document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
+      }
+    }
+
+    // Toggle Language function
+    function toggleLanguage() {
+      let currentLang = document.querySelector('.language-toggle').textContent;
+      if (currentLang === 'عربي') {
+        document.querySelector('.language-toggle').textContent = 'English';
+        document.getElementById('iosButton').textContent = 'iPhone Apps';
+        document.getElementById('androidButton').textContent = 'Android Apps';
+        document.getElementById('pcButton').textContent = 'PC Apps';
+      } else {
+        document.querySelector('.language-toggle').textContent = 'عربي';
+        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
+        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
+        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
       }
     }
   </script>
