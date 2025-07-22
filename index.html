@@ -180,7 +180,7 @@
   </div>
 
   <!-- ايفون Apps List -->
-  <div class="container" id="ios" style="display: none;">
+  <div class="app-list" id="ios">
     <div class="card" onclick="window.location.href='https://shorturl.at/uICmd'">تحميل دلتا</div>
     <div class="card" onclick="window.location.href='https://shorturl.at/utlPE'">تحميل كرنل</div>
     <div class="card" onclick="window.location.href='https://shorturl.at/qQtXW'">تحميل كوكودس</div>
@@ -200,7 +200,7 @@
     // Function to toggle the visibility of app lists
     function toggleList(platform) {
       // Hide all lists first
-      const allLists = document.querySelectorAll('.container');
+      const allLists = document.querySelectorAll('.app-list');
       allLists.forEach(list => list.style.display = 'none');
       
       // Show the clicked list
