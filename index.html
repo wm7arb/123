@@ -51,6 +51,35 @@
       right: 20px;
     }
 
+    /* شريط القائمة المنسدلة */
+    .menu-items {
+      display: none;
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #6e6e6e;
+      width: 200px;
+      z-index: 1000;
+    }
+
+    .menu-items a {
+      color: white;
+      text-decoration: none;
+      padding: 15px;
+      display: block;
+      border-bottom: 1px solid #6e6e6e;
+    }
+
+    .menu-items a:hover {
+      background-color: #444;
+    }
+
+    .menu-items a.active {
+      background-color: #6e6e6e;
+    }
+
     /* تكبير الأزرار */
     .button {
       background-color: #333;
@@ -75,7 +104,6 @@
       box-shadow: 0 0 25px #6e6e6e, 0 0 35px #6e6e6e;
     }
 
-    /* أزرار وسائل التواصل */
     .social-buttons {
       display: flex;
       gap: 20px;
@@ -152,6 +180,7 @@
   </style>
 </head>
 <body>
+
   <!-- زر القائمة -->
   <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
 
@@ -179,17 +208,19 @@
     <a href="https://youtube.com/@crizix1?si=xrED4AFIIoa1bxjR" class="social-button youtube" target="_blank">يوتيوب</a>
   </div>
 
-  <!-- قوائم التطبيقات -->
+  <!-- قائمة تطبيقات آيفون -->
   <div class="app-list" id="ios">
     <div><a href="https://shorturl.at/qQtXW" target="_blank">تحميل كوكودس</a></div>
     <div><a href="https://shorturl.at/uICmd" target="_blank">تحميل دلتا</a></div>
     <div><a href="https://www.shorturl.at/utlPE" target="_blank">تحميل كرنل</a></div>
   </div>
 
+  <!-- قائمة تطبيقات أندرويد -->
   <div class="app-list" id="android">
     <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
 
+  <!-- قائمة تطبيقات بي سي -->
   <div class="app-list" id="pc">
     <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
@@ -220,10 +251,23 @@
       }
     }
 
-    // دالة لفتح وإغلاق شريط القائمة
+    // دالة لفتح القائمة المنسدلة
     function toggleMenu() {
-      alert("قائمة جديدة");
+      const menu = document.querySelector('.menu-items');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
+
+    // إضافة فعاليات للقائمة المنسدلة
+    document.addEventListener('DOMContentLoaded', function() {
+      const items = document.querySelectorAll('.menu-items a');
+      items.forEach(item => {
+        item.addEventListener('click', function() {
+          items.forEach(link => link.classList.remove('active'));
+          item.classList.add('active');
+        });
+      });
+    });
   </script>
+
 </body>
 </html>
