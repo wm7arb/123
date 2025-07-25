@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>CRIZIX TOP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -40,43 +41,31 @@
       box-shadow: 0 0 20px #6e6e6e;
     }
 
-    /* باقي الكود يظل كما هو */
-    img.logo {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 20px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px #6e6e6e;
+    /* شريط القائمة في الأعلى */
+    .menu-icon {
+      font-size: 40px;
+      cursor: pointer;
+      color: #ffffff;
+      position: fixed;
+      top: 20px;
+      right: 20px;
     }
 
-    h1 {
-      font-size: 56px;
-      color: #6e6e6e;
-      margin-bottom: 10px;
-      text-shadow: 0 0 12px #6e6e6e;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-      justify-content: center;
-    }
-
+    /* تكبير الأزرار */
     .button {
       background-color: #333;
       border: 2px solid #6e6e6e;
       border-radius: 15px;
-      padding: 30px 60px;
-      font-size: 28px;
+      padding: 50px 100px;
+      font-size: 40px;
       color: #ffffff;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
       box-shadow: 0 0 10px #6e6e6e, 0 0 20px #6e6e6e;
       text-transform: uppercase;
-      width: 250px;
-      margin: 10px;
+      width: 350px;
+      margin: 20px;
     }
 
     .button:hover {
@@ -86,6 +75,7 @@
       box-shadow: 0 0 25px #6e6e6e, 0 0 35px #6e6e6e;
     }
 
+    /* أزرار وسائل التواصل */
     .social-buttons {
       display: flex;
       gap: 20px;
@@ -162,69 +152,59 @@
   </style>
 </head>
 <body>
+  <!-- زر القائمة -->
+  <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+
   <button class="language-toggle" onclick="toggleLanguage()">عربي</button>
 
   <img src="https://i.ibb.co/G4VnHWLZ/28aeecb32800.jpg" alt="CRIZIX Logo" class="logo" />
   <h1>CRIZIX TOP</h1>
 
   <div class="container">
-    <!-- Buttons to toggle lists -->
-    <div class="button" id="iosButton" onclick="toggleList('ios')">تطبيقات ايفون</div>
-    <div class="button" id="androidButton" onclick="toggleList('android')">تطبيقات اندرويد</div>
-    <div class="button" id="pcButton" onclick="toggleList('pc')">تطبيقات بي سي</div>
+    <!-- أزرار التطبيقات مع الأيقونات -->
+    <div class="button" id="iosButton" onclick="toggleList('ios')">
+      <i class="fas fa-iphone"></i> تطبيقات ايفون
+    </div>
+    <div class="button" id="androidButton" onclick="toggleList('android')">
+      <i class="fas fa-android"></i> تطبيقات اندرويد
+    </div>
+    <div class="button" id="pcButton" onclick="toggleList('pc')">
+      <i class="fas fa-laptop"></i> تطبيقات بي سي
+    </div>
   </div>
 
-  <!-- Social Buttons (Discord and YouTube) -->
+  <!-- روابط وسائل التواصل -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" class="social-button" target="_blank">ديسكورد</a>
     <a href="https://youtube.com/@crizix1?si=xrED4AFIIoa1bxjR" class="social-button youtube" target="_blank">يوتيوب</a>
   </div>
 
-  <!-- ايفون Apps List -->
+  <!-- قوائم التطبيقات -->
   <div class="app-list" id="ios">
     <div><a href="https://shorturl.at/qQtXW" target="_blank">تحميل كوكودس</a></div>
     <div><a href="https://shorturl.at/uICmd" target="_blank">تحميل دلتا</a></div>
     <div><a href="https://www.shorturl.at/utlPE" target="_blank">تحميل كرنل</a></div>
   </div>
 
-  <!-- اندرويد Apps List -->
   <div class="app-list" id="android">
     <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
 
-  <!-- بي سي Apps List -->
   <div class="app-list" id="pc">
     <div>للأسف، لا يوجد حالياً أي هاك</div>
   </div>
 
   <script>
-    // Function to toggle the visibility of app lists
+    // دالة لتبديل القوائم
     function toggleList(platform) {
-      // Hide all lists first
       const allLists = document.querySelectorAll('.app-list');
       allLists.forEach(list => list.style.display = 'none');
-      
-      // Show the clicked list
+
       const selectedList = document.getElementById(platform);
       selectedList.style.display = 'flex';
-
-      // Change button text according to the selected list
-      if (platform === 'ios') {
-        document.getElementById('iosButton').textContent = 'عرض تطبيقات ايفون';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
-      } else if (platform === 'android') {
-        document.getElementById('androidButton').textContent = 'عرض تطبيقات اندرويد';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
-      } else if (platform === 'pc') {
-        document.getElementById('pcButton').textContent = 'عرض تطبيقات بي سي';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-      }
     }
 
-    // Toggle Language function
+    // دالة لتبديل اللغة
     function toggleLanguage() {
       let currentLang = document.querySelector('.language-toggle').textContent;
       if (currentLang === 'عربي') {
@@ -238,6 +218,11 @@
         document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
         document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
       }
+    }
+
+    // دالة لفتح وإغلاق شريط القائمة
+    function toggleMenu() {
+      alert("قائمة جديدة");
     }
   </script>
 </body>
