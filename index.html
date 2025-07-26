@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>CRIZIX TOP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #000428, #4e4e4e);
+      color: white;
+      text-align: center;
+    }
 
+    .menu-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 32px;
+      color: white;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .menu-items {
+      display: none;
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background-color: #111;
+      border-radius: 12px;
+      width: 250px;
+      box-shadow: 0 0 15px #6e6e6e;
+      z-index: 1000;
+    }
+
+    .menu-items a {
+      display: block;
+      padding: 16px;
+      font-size: 18px;
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      transition: 0.3s;
+    }
+
+    .menu-items a:hover {
+      background-color: #333;
+      color: #ffcc00;
+    }
+
+    h1 {
+      font-size: 48px;
+      margin-top: 100px;
+      color: #ffcc00;
+      text-shadow: 0 0 15px #ffcc00;
+    }
+
+    p {
+      font-size: 20px;
+      color: #ccc;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- زر الشرطات -->
+  <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+
+  <!-- القائمة المنسدلة -->
+  <div class="menu-items" id="menu">
+    <a href="#ios">📱 تطبيقات iOS</a>
+    <a href="#android">🤖 تطبيقات Android</a>
+    <a href="#pc">💻 تطبيقات PC</a>
+    <a href="https://wa.me/966500000000" target="_blank">🛠️ دعم فني</a>
+    <a href="https://youtube.com/@crizix1" target="_blank">📺 يوتيوب</a>
+  </div>
+
+  <!-- العنوان فقط -->
+  <h1>CRIZIX TOP</h1>
+  <p>مرحبا بك في منصتنا 💻📱</p>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>
