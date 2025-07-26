@@ -22,71 +22,53 @@
       margin-top: 100px;
     }
 
-    .menu-icon {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      font-size: 40px;
-      color: #fff;
+    /* تصميم الأزرار */
+    .button {
+      background-color: #e74c3c;
+      border: none;
+      padding: 20px 60px;
+      font-size: 24px;
+      color: white;
+      text-align: center;
       cursor: pointer;
-      z-index: 1001;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #e74c3c;
+      transition: 0.3s;
     }
 
+    .button:hover {
+      background-color: #c0392b;
+      box-shadow: 0 0 20px #c0392b;
+    }
+
+    /* تصميم القوائم */
     .menu-items {
       display: none;
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background-color: #222;
-      border-radius: 15px;
-      width: 320px;
-      box-shadow: 0 0 15px #6e6e6e;
-      z-index: 1000;
+      background-color: #333;
+      border-radius: 12px;
+      padding: 20px;
+      width: 300px;
+      margin: 20px auto;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
     }
 
     .menu-items a {
       display: block;
-      padding: 25px;
-      font-size: 28px;
-      color: white;
-      text-decoration: none;
-      border-bottom: 1px solid #333;
-      transition: 0.3s;
-    }
-
-    .menu-items a:hover {
-      background-color: #333;
-      color: #ffcc00;
-    }
-
-    /* تغييرات على التصميم للأزرار */
-    .app-container {
-      margin-top: 50px;
-      padding: 20px;
-    }
-
-    .app-container img {
-      width: 250px;
-      height: auto;
-      margin-bottom: 20px;
-    }
-
-    .app-container a {
-      display: inline-block;
       font-size: 24px;
       color: white;
       text-decoration: none;
-      background-color: #e74c3c;
-      padding: 15px 30px;
-      border-radius: 12px;
-      margin-top: 10px;
-      transition: 0.3s;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      transition: background-color 0.3s;
     }
 
-    .app-container a:hover {
+    .menu-items a:hover {
       background-color: #c0392b;
     }
 
+    /* أزرار دعم فني ويوتيوب */
     .social-buttons a {
       display: inline-block;
       font-size: 22px;
@@ -117,30 +99,45 @@
 
   <h1>CRIZIX TOP</h1>
 
-  <div class="app-container">
-    <!-- تغيير صورة وتثبيت التطبيق -->
-    <img src="https://your-link-to-image1.com" alt="كرنل">
-    <p>كرنل</p>
-    <a href="https://shorturl.at/qQtXW">تثبيت التطبيق</a>
+  <!-- قائمة iOS -->
+  <div>
+    <button class="button" onclick="toggleMenu('ios')">تطبيقات iOS</button>
+    <div class="menu-items" id="ios">
+      <a href="https://shorturl.at/qQtXW">تثبيت كرنل</a>
+      <a href="https://shorturl.at/uICmd">تثبيت دلتا</a>
+      <a href="https://www.shorturl.at/utlPE">تثبيت كودكس</a>
+    </div>
   </div>
 
-  <div class="app-container">
-    <img src="https://your-link-to-image2.com" alt="دلتا">
-    <p>دلتا</p>
-    <a href="https://shorturl.at/uICmd">تثبيت التطبيق</a>
+  <!-- قائمة Android -->
+  <div>
+    <button class="button" onclick="toggleMenu('android')">تطبيقات Android</button>
+    <div class="menu-items" id="android">
+      <p>للأسف، لا يوجد لدينا أي هاك يخص Android</p>
+    </div>
   </div>
 
-  <div class="app-container">
-    <img src="https://your-link-to-image3.com" alt="كودكس">
-    <p>كودكس</p>
-    <a href="https://www.shorturl.at/utlPE">تثبيت التطبيق</a>
+  <!-- قائمة PC -->
+  <div>
+    <button class="button" onclick="toggleMenu('pc')">تطبيقات PC</button>
+    <div class="menu-items" id="pc">
+      <p>للأسف، لا يوجد لدينا أي هاك يخص PC</p>
+    </div>
   </div>
 
-  <!-- أزرار دعم فني ويوتيوب -->
+  <!-- روابط دعم فني ويوتيوب -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
     <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
   </div>
+
+  <script>
+    // وظيفة لفتح وإغلاق القوائم المنسدلة
+    function toggleMenu(menu) {
+      const menuItems = document.getElementById(menu);
+      menuItems.style.display = menuItems.style.display === "block" ? "none" : "block";
+    }
+  </script>
 
 </body>
 </html>
