@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #000428, #4e4e4e);
+      background: #1c1c1c;
       color: white;
       text-align: center;
       font-size: 24px;
@@ -21,37 +21,130 @@
       margin-top: 100px;
     }
 
-    /* قائمة الأزرار */
-    .button {
-      background-color: #e74c3c;
-      border: none;
-      padding: 20px 60px;
-      font-size: 24px;
-      color: white;
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .app-box {
+      background-color: #333;
+      border-radius: 20px;
+      padding: 20px;
+      width: 300px;
       text-align: center;
-      cursor: pointer;
-      margin: 20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+      margin-bottom: 40px;
+    }
+
+    .app-box img {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+
+    .app-box p {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .app-box a {
+      display: block;
+      font-size: 22px;
+      color: white;
+      text-decoration: none;
+      background-color: #e74c3c;
+      padding: 20px 40px;
       border-radius: 12px;
-      box-shadow: 0 0 10px #e74c3c;
+      margin-top: 15px;
+      transition: 0.3s;
+      margin-bottom: 15px;
+    }
+
+    .app-box a:hover {
+      background-color: #c0392b;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 20px;
+      color: white;
+      border-radius: 12px;
+    }
+
+    .status.on {
+      background-color: #2ecc71;
+    }
+
+    .status.off {
+      background-color: #e74c3c;
+    }
+
+    /* الأزرار السفلية للديسكورد واليوتيوب */
+    .social-buttons a {
+      display: inline-block;
+      font-size: 22px;
+      color: white;
+      background-color: #5865F2;
+      padding: 15px 30px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-decoration: none;
       transition: 0.3s;
     }
 
-    .button:hover {
-      background-color: #c0392b;
-      box-shadow: 0 0 20px #c0392b;
+    .social-buttons a:hover {
+      background-color: #4e55c4;
     }
+
+    .social-buttons a.youtube {
+      background-color: #FF0000;
+    }
+
+    .social-buttons a.youtube:hover {
+      background-color: #cc0000;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- اسم الموقع -->
   <h1>CRIZIX TOP</h1>
 
-  <!-- روابط لأزرار الانتقال إلى الصفحات الخاصة بكل فئة -->
-  <div>
-    <a href="ios.html" class="button">📱 تطبيقات iOS</a>
-    <a href="android.html" class="button">🤖 تطبيقات Android</a>
-    <a href="pc.html" class="button">💻 تطبيقات PC</a>
+  <div class="container">
+    <!-- كرونل هاك -->
+    <div class="app-box">
+      <img src="https://your-link-to-image1.com" alt="كرنل">
+      <p>كرنل</p>
+      <a href="https://shorturl.at/qQtXW">تثبيت التطبيق</a>
+      <div class="status on">WORKING</div>
+    </div>
+
+    <!-- دلتا هاك -->
+    <div class="app-box">
+      <img src="https://your-link-to-image2.com" alt="دلتا">
+      <p>دلتا</p>
+      <a href="https://shorturl.at/uICmd">تثبيت التطبيق</a>
+      <div class="status on">WORKING</div>
+    </div>
+
+    <!-- كودكس هاك -->
+    <div class="app-box">
+      <img src="https://your-link-to-image3.com" alt="كودكس">
+      <p>كودكس</p>
+      <a href="https://www.shorturl.at/utlPE">تثبيت التطبيق</a>
+      <div class="status off">OFF</div>
+    </div>
+  </div>
+
+  <!-- أزرار الديسكورد واليوتيوب -->
+  <div class="social-buttons">
+    <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
+    <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
   </div>
 
 </body>
