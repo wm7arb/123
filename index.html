@@ -2,13 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CRIZIX TOP</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #1c1c1c;
+      background: linear-gradient(135deg, #000428, #4e4e4e);
       color: white;
       text-align: center;
       font-size: 24px;
@@ -21,70 +22,71 @@
       margin-top: 100px;
     }
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 40px;
-    }
-
-    .app-box {
-      background-color: #333;
-      border-radius: 20px;
-      padding: 20px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-      margin-bottom: 40px;
-    }
-
-    .app-box img {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 20px;
-    }
-
-    .app-box p {
-      font-size: 24px;
-      margin-bottom: 20px;
+    .menu-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 40px;
       color: #fff;
+      cursor: pointer;
+      z-index: 1001;
     }
 
-    .app-box a {
+    .menu-items {
+      display: none;
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background-color: #222;
+      border-radius: 15px;
+      width: 320px;
+      box-shadow: 0 0 15px #6e6e6e;
+      z-index: 1000;
+    }
+
+    .menu-items a {
       display: block;
-      font-size: 22px;
+      padding: 25px;
+      font-size: 28px;
+      color: white;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      transition: 0.3s;
+    }
+
+    .menu-items a:hover {
+      background-color: #333;
+      color: #ffcc00;
+    }
+
+    /* تغييرات على التصميم للأزرار */
+    .app-container {
+      margin-top: 50px;
+      padding: 20px;
+    }
+
+    .app-container img {
+      width: 250px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .app-container a {
+      display: inline-block;
+      font-size: 24px;
       color: white;
       text-decoration: none;
       background-color: #e74c3c;
-      padding: 20px 40px;
+      padding: 15px 30px;
       border-radius: 12px;
-      margin-top: 15px;
+      margin-top: 10px;
       transition: 0.3s;
-      margin-bottom: 15px;
     }
 
-    .app-box a:hover {
+    .app-container a:hover {
       background-color: #c0392b;
     }
 
-    .status {
-      margin-top: 15px;
-      padding: 10px;
-      font-size: 20px;
-      color: white;
-      border-radius: 12px;
-    }
-
-    .status.on {
-      background-color: #2ecc71;
-    }
-
-    .status.off {
-      background-color: #e74c3c;
-    }
-
-    /* الأزرار السفلية للديسكورد واليوتيوب */
     .social-buttons a {
       display: inline-block;
       font-size: 22px;
@@ -115,33 +117,26 @@
 
   <h1>CRIZIX TOP</h1>
 
-  <div class="container">
-    <!-- كرونل هاك -->
-    <div class="app-box">
-      <img src="https://your-link-to-image1.com" alt="كرنل">
-      <p>كرنل</p>
-      <a href="https://shorturl.at/qQtXW">تثبيت التطبيق</a>
-      <div class="status on">WORKING</div>
-    </div>
-
-    <!-- دلتا هاك -->
-    <div class="app-box">
-      <img src="https://your-link-to-image2.com" alt="دلتا">
-      <p>دلتا</p>
-      <a href="https://shorturl.at/uICmd">تثبيت التطبيق</a>
-      <div class="status on">WORKING</div>
-    </div>
-
-    <!-- كودكس هاك -->
-    <div class="app-box">
-      <img src="https://your-link-to-image3.com" alt="كودكس">
-      <p>كودكس</p>
-      <a href="https://www.shorturl.at/utlPE">تثبيت التطبيق</a>
-      <div class="status off">OFF</div>
-    </div>
+  <div class="app-container">
+    <!-- تغيير صورة وتثبيت التطبيق -->
+    <img src="https://your-link-to-image1.com" alt="كرنل">
+    <p>كرنل</p>
+    <a href="https://shorturl.at/qQtXW">تثبيت التطبيق</a>
   </div>
 
-  <!-- أزرار الديسكورد واليوتيوب -->
+  <div class="app-container">
+    <img src="https://your-link-to-image2.com" alt="دلتا">
+    <p>دلتا</p>
+    <a href="https://shorturl.at/uICmd">تثبيت التطبيق</a>
+  </div>
+
+  <div class="app-container">
+    <img src="https://your-link-to-image3.com" alt="كودكس">
+    <p>كودكس</p>
+    <a href="https://www.shorturl.at/utlPE">تثبيت التطبيق</a>
+  </div>
+
+  <!-- أزرار دعم فني ويوتيوب -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
     <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
