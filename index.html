@@ -62,6 +62,34 @@
       color: #ccc;
       margin-bottom: 40px;
     }
+
+    /* تخصيص للقائمة الفرعية (روابط التحميل) */
+    .ios-links {
+      padding-left: 20px;
+      background-color: #222;
+      display: none;
+    }
+
+    .ios-links a {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #444;
+    }
+
+    .ios-links a:hover {
+      background-color: #444;
+    }
+
+    /* رسالة للأسف */
+    .message {
+      font-size: 20px;
+      color: #ff0000;
+      text-align: center;
+      margin-top: 20px;
+    }
+
   </style>
 </head>
 <body>
@@ -71,9 +99,14 @@
 
   <!-- القائمة المنسدلة -->
   <div class="menu-items" id="menu">
-    <a href="#ios">📱 تطبيقات iOS</a>
-    <a href="#android">🤖 تطبيقات Android</a>
-    <a href="#pc">💻 تطبيقات PC</a>
+    <a href="javascript:void(0);" onclick="toggleIosLinks()">📱 تطبيقات iOS</a>
+    <div class="ios-links" id="iosLinks">
+      <a href="https://shorturl.at/qQtXW" target="_blank">تحميل كوكودس</a>
+      <a href="https://shorturl.at/uICmd" target="_blank">تحميل دلتا</a>
+      <a href="https://www.shorturl.at/utlPE" target="_blank">تحميل كرنل</a>
+    </div>
+    <a href="javascript:void(0);" onclick="showMessage('android')">🤖 تطبيقات Android</a>
+    <a href="javascript:void(0);" onclick="showMessage('pc')">💻 تطبيقات PC</a>
     <a href="https://wa.me/966500000000" target="_blank">🛠️ دعم فني</a>
     <a href="https://youtube.com/@crizix1" target="_blank">📺 يوتيوب</a>
   </div>
@@ -82,11 +115,33 @@
   <h1>CRIZIX TOP</h1>
   <p>مرحبا بك في منصتنا 💻📱</p>
 
+  <!-- المساحة لعرض الرسالة -->
+  <div id="messageContainer"></div>
+
   <script>
     function toggleMenu() {
       const menu = document.getElementById("menu");
       menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
+
+    // دالة لتبديل ظهور روابط تحميل iOS
+    function toggleIosLinks() {
+      const iosLinks = document.getElementById("iosLinks");
+      iosLinks.style.display = iosLinks.style.display === "block" ? "none" : "block";
+    }
+
+    // دالة لعرض الرسالة الخاصة
+    function showMessage(platform) {
+      let message = "";
+      if (platform === 'android') {
+        message = "للأسف، لا يوجد لدينا أي هاك يخص Android";
+      } else if (platform === 'pc') {
+        message = "للأسف، لا يوجد لدينا أي هاك يخص PC";
+      }
+
+      document.getElementById("messageContainer").innerHTML = `<div class="message">${message}</div>`;
+    }
   </script>
+
 </body>
 </html>
