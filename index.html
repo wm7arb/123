@@ -42,7 +42,7 @@
       box-shadow: 0 0 20px #c0392b;
     }
 
-    /* تصميم القوائم */
+    /* تصميم القوائم الجانبية */
     .menu-container {
       display: none;
       padding: 20px;
@@ -55,14 +55,7 @@
       margin-bottom: 30px;
     }
 
-    .menu-container img {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 20px;
-      border-radius: 50%;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-    }
-
+    /* تصميم الأزرار في القائمة الجانبية */
     .menu-container a {
       display: block;
       font-size: 24px;
@@ -110,29 +103,16 @@
 
   <!-- أزرار الانتقال إلى القوائم -->
   <div>
-    <button class="button" onclick="window.location.href='ios.html'">تطبيقات iOS</button>
-    <button class="button" onclick="window.location.href='android.html'">تطبيقات Android</button>
-    <button class="button" onclick="window.location.href='pc.html'">تطبيقات PC</button>
+    <button class="button" onclick="toggleMenu()">☰ القائمة</button>
   </div>
 
-  <!-- قائمة iOS -->
-  <div id="ios" class="menu-container">
-    <img src="image_1.png" alt="كرنل">
-    <a href="https://shorturl.at/qQtXW">تثبيت كرنل</a>
-    <img src="image_2.png" alt="دلتا">
-    <a href="https://shorturl.at/uICmd">تثبيت دلتا</a>
-    <img src="image_3.png" alt="كودكس">
-    <a href="https://www.shorturl.at/utlPE">تثبيت كودكس</a>
-  </div>
-
-  <!-- قائمة Android -->
-  <div id="android" class="menu-container">
-    <p>للأسف، لا يوجد لدينا أي هاك يخص Android</p>
-  </div>
-
-  <!-- قائمة PC -->
-  <div id="pc" class="menu-container">
-    <p>للأسف، لا يوجد لدينا أي هاك يخص PC</p>
+  <!-- قائمة جانبية -->
+  <div id="sideMenu" class="menu-container">
+    <a href="ios.html">تطبيقات iOS</a>
+    <a href="android.html">تطبيقات Android</a>
+    <a href="pc.html">تطبيقات PC</a>
+    <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
+    <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
   </div>
 
   <!-- روابط دعم فني ويوتيوب -->
@@ -142,15 +122,14 @@
   </div>
 
   <script>
-    // تفعيل/إخفاء القوائم المنسدلة عند الضغط
-    function showMenu(menu) {
-      // إخفاء جميع القوائم أولاً
-      const allMenus = document.querySelectorAll('.menu-container');
-      allMenus.forEach(menu => menu.style.display = 'none');
-
-      // إظهار القائمة المطلوبة
-      const selectedMenu = document.getElementById(menu);
-      selectedMenu.style.display = 'block';
+    // تفعيل/إخفاء القائمة الجانبية
+    function toggleMenu() {
+      var menu = document.getElementById('sideMenu');
+      if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'block';
+      }
     }
   </script>
 
