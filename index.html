@@ -14,81 +14,45 @@
       font-size: 24px;
     }
 
-    .menu-icon {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      font-size: 40px;
-      color: #0000FF;
-      cursor: pointer;
-      z-index: 1001;
+    h1 {
+      font-size: 70px;
+      color: #ffcc00;
+      text-shadow: 0 0 15px #ffcc00;
+      margin-top: 100px;
     }
 
-    .menu-items {
-      display: none;
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background-color: #222;
-      border-radius: 15px;
-      width: 300px;
-      box-shadow: 0 0 15px #6e6e6e;
-      z-index: 1000;
-    }
-
-    .menu-items a {
-      display: block;
-      padding: 20px;
-      font-size: 22px;
+    /* قائمة الأزرار */
+    .button {
+      background-color: #e74c3c;
+      border: none;
+      padding: 20px 60px;
+      font-size: 24px;
       color: white;
-      text-decoration: none;
-      border-bottom: 1px solid #333;
+      text-align: center;
+      cursor: pointer;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #e74c3c;
       transition: 0.3s;
     }
 
-    .menu-items a:hover {
-      background-color: #333;
-      color: #ffcc00;
-    }
-
-    h1 {
-      font-size: 60px;
-      margin-top: 120px;
-      color: #ffcc00;
-      text-shadow: 0 0 15px #ffcc00;
-    }
-
-    p {
-      font-size: 26px;
-      color: #ccc;
-      margin-bottom: 50px;
+    .button:hover {
+      background-color: #c0392b;
+      box-shadow: 0 0 20px #c0392b;
     }
   </style>
 </head>
 <body>
 
-  <!-- زر الشرطات -->
-  <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
-
-  <!-- القائمة المنسدلة -->
-  <div class="menu-items" id="menu">
-    <a href="ios.html">📱 تطبيقات iOS</a>
-    <a href="android.html">🤖 تطبيقات Android</a>
-    <a href="pc.html">💻 تطبيقات PC</a>
-    <a href="https://wa.me/966500000000" target="_blank">🛠️ دعم فني</a>
-    <a href="https://youtube.com/@crizix1" target="_blank">📺 يوتيوب</a>
-  </div>
-
-  <!-- العنوان فقط -->
+  <!-- اسم الموقع -->
   <h1>CRIZIX TOP</h1>
-  <p>مرحباً بك في منصتنا 💻📱</p>
 
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("menu");
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    }
-  </script>
+  <!-- روابط لأزرار الانتقال إلى الصفحات الخاصة بكل فئة -->
+  <div>
+    <a href="ios.html" class="button">📱 تطبيقات iOS</a>
+    <a href="android.html" class="button">🤖 تطبيقات Android</a>
+    <a href="pc.html" class="button">💻 تطبيقات PC</a>
+  </div>
 
 </body>
 </html>
