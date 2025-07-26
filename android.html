@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تطبيقات اندرويد</title>
+  <title>تطبيقات Android</title>
   <style>
     body {
       margin: 0;
@@ -20,18 +20,64 @@
       margin-top: 100px;
     }
 
+    .button {
+      background-color: #e74c3c;
+      border: none;
+      padding: 20px 60px;
+      font-size: 24px;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #e74c3c;
+      transition: 0.3s;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background-color: #c0392b;
+      box-shadow: 0 0 20px #c0392b;
+    }
+
+    .button img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
     .message {
       font-size: 24px;
       color: #ff0000;
       text-align: center;
       margin-top: 20px;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 8px;
     }
+
   </style>
 </head>
 <body>
 
   <h1>تطبيقات Android</h1>
+
+  <!-- رسالة تقول انه لا يوجد هاك لـ Android -->
   <div class="message">للأسف، لا يوجد لدينا أي هاك يخص Android</div>
+
+  <!-- أزرار placeholder أو رسائل أخرى -->
+  <div>
+    <button class="button">
+      <img src="image_1.png" alt="هاك 1"> تطبيق 1
+    </button>
+    <button class="button">
+      <img src="image_2.png" alt="هاك 2"> تطبيق 2
+    </button>
+    <button class="button">
+      <img src="image_3.png" alt="هاك 3"> تطبيق 3
+    </button>
+  </div>
 
 </body>
 </html>
