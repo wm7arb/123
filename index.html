@@ -42,7 +42,42 @@
       box-shadow: 0 0 20px #c0392b;
     }
 
-    /* تصميم الأزرار في الأسفل */
+    /* تصميم القوائم */
+    .menu-container {
+      display: none;
+      padding: 20px;
+      width: 80%;
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: #333;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+      margin-bottom: 30px;
+    }
+
+    .menu-container img {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    }
+
+    .menu-container a {
+      display: block;
+      font-size: 24px;
+      color: white;
+      text-decoration: none;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      transition: background-color 0.3s;
+    }
+
+    .menu-container a:hover {
+      background-color: #c0392b;
+    }
+
     .social-buttons a {
       display: inline-block;
       font-size: 22px;
@@ -80,11 +115,44 @@
     <button class="button" onclick="window.location.href='pc.html'">تطبيقات PC</button>
   </div>
 
+  <!-- قائمة iOS -->
+  <div id="ios" class="menu-container">
+    <img src="image_1.png" alt="كرنل">
+    <a href="https://shorturl.at/qQtXW">تثبيت كرنل</a>
+    <img src="image_2.png" alt="دلتا">
+    <a href="https://shorturl.at/uICmd">تثبيت دلتا</a>
+    <img src="image_3.png" alt="كودكس">
+    <a href="https://www.shorturl.at/utlPE">تثبيت كودكس</a>
+  </div>
+
+  <!-- قائمة Android -->
+  <div id="android" class="menu-container">
+    <p>للأسف، لا يوجد لدينا أي هاك يخص Android</p>
+  </div>
+
+  <!-- قائمة PC -->
+  <div id="pc" class="menu-container">
+    <p>للأسف، لا يوجد لدينا أي هاك يخص PC</p>
+  </div>
+
   <!-- روابط دعم فني ويوتيوب -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
     <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
   </div>
+
+  <script>
+    // تفعيل/إخفاء القوائم المنسدلة عند الضغط
+    function showMenu(menu) {
+      // إخفاء جميع القوائم أولاً
+      const allMenus = document.querySelectorAll('.menu-container');
+      allMenus.forEach(menu => menu.style.display = 'none');
+
+      // إظهار القائمة المطلوبة
+      const selectedMenu = document.getElementById(menu);
+      selectedMenu.style.display = 'block';
+    }
+  </script>
 
 </body>
 </html>
