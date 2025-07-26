@@ -20,7 +20,7 @@
       padding: 40px 20px;
     }
 
-    /* زر تغيير اللغة في الزاوية العلوية */
+    /* زر تغيير اللغة */
     .language-toggle {
       position: fixed;
       top: 20px;
@@ -35,13 +35,7 @@
       box-shadow: 0 0 10px #6e6e6e;
     }
 
-    .language-toggle:hover {
-      background-color: #6e6e6e;
-      color: #000;
-      box-shadow: 0 0 20px #6e6e6e;
-    }
-
-    /* شريط القائمة في الأعلى */
+    /* زر القائمة (ثلاث شرطات) */
     .menu-icon {
       font-size: 40px;
       cursor: pointer;
@@ -49,38 +43,60 @@
       position: fixed;
       top: 20px;
       right: 20px;
+      z-index: 1001;
     }
 
-    /* شريط القائمة المنسدلة */
+    /* القائمة المنسدلة */
     .menu-items {
       display: none;
       position: fixed;
-      top: 80px;
+      top: 70px;
       right: 20px;
-      background-color: #333;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #6e6e6e;
-      width: 200px;
+      background-color: #111;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #6e6e6e;
+      width: 250px;
       z-index: 1000;
+      overflow: hidden;
     }
 
     .menu-items a {
-      color: white;
-      text-decoration: none;
-      padding: 15px;
       display: block;
-      border-bottom: 1px solid #6e6e6e;
+      padding: 18px;
+      font-size: 20px;
+      text-decoration: none;
+      color: white;
+      border-bottom: 1px solid #333;
+      transition: 0.3s;
     }
 
     .menu-items a:hover {
-      background-color: #444;
+      background-color: #333;
+      color: #ffcc00;
     }
 
-    .menu-items a.active {
-      background-color: #6e6e6e;
+    .logo {
+      width: 150px;
+      height: 150px;
+      margin-top: 80px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #6e6e6e;
     }
 
-    /* تكبير الأزرار */
+    h1 {
+      font-size: 56px;
+      color: #6e6e6e;
+      margin-bottom: 10px;
+      text-shadow: 0 0 12px #6e6e6e;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      justify-content: center;
+    }
+
     .button {
       background-color: #333;
       border: 2px solid #6e6e6e;
@@ -170,13 +186,6 @@
       color: #6e6e6e;
     }
 
-    .message {
-      font-size: 24px;
-      color: #ff0000;
-      text-align: center;
-      margin-top: 20px;
-    }
-
   </style>
 </head>
 <body>
@@ -184,90 +193,74 @@
   <!-- زر القائمة -->
   <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
 
+  <!-- القائمة المنسدلة -->
+  <div class="menu-items" id="menu">
+    <a href="#ios">📱 تطبيقات iOS</a>
+    <a href="#android">🤖 تطبيقات Android</a>
+    <a href="#pc">💻 تطبيقات PC</a>
+    <a href="https://wa.me/966500000000" target="_blank">🛠️ دعم فني</a>
+    <a href="https://youtube.com/@crizix1" target="_blank">📺 يوتيوب</a>
+  </div>
+
   <button class="language-toggle" onclick="toggleLanguage()">عربي</button>
 
+  <!-- الشعار والاسم -->
   <img src="https://i.ibb.co/G4VnHWLZ/28aeecb32800.jpg" alt="CRIZIX Logo" class="logo" />
   <h1>CRIZIX TOP</h1>
 
+  <!-- الأزرار -->
   <div class="container">
-    <!-- أزرار التطبيقات مع الأيقونات -->
-    <div class="button" id="iosButton" onclick="toggleList('ios')">
-      <i class="fas fa-iphone"></i> تطبيقات ايفون
+    <div class="button" onclick="toggleList('ios')" id="iosButton">
+      <i class="fas fa-iphone"></i> تطبيقات iOS
     </div>
-    <div class="button" id="androidButton" onclick="toggleList('android')">
-      <i class="fas fa-android"></i> تطبيقات اندرويد
+    <div class="button" onclick="toggleList('android')" id="androidButton">
+      <i class="fab fa-android"></i> تطبيقات Android
     </div>
-    <div class="button" id="pcButton" onclick="toggleList('pc')">
-      <i class="fas fa-laptop"></i> تطبيقات بي سي
+    <div class="button" onclick="toggleList('pc')" id="pcButton">
+      <i class="fas fa-laptop"></i> تطبيقات PC
     </div>
   </div>
 
-  <!-- روابط وسائل التواصل -->
+  <!-- روابط -->
   <div class="social-buttons">
     <a href="https://discord.gg/crizix" class="social-button" target="_blank">ديسكورد</a>
-    <a href="https://youtube.com/@crizix1?si=xrED4AFIIoa1bxjR" class="social-button youtube" target="_blank">يوتيوب</a>
+    <a href="https://youtube.com/@crizix1" class="social-button youtube" target="_blank">يوتيوب</a>
   </div>
 
-  <!-- قائمة تطبيقات آيفون -->
+  <!-- القوائم -->
   <div class="app-list" id="ios">
-    <div><a href="https://shorturl.at/qQtXW" target="_blank">تحميل كوكودس</a></div>
-    <div><a href="https://shorturl.at/uICmd" target="_blank">تحميل دلتا</a></div>
-    <div><a href="https://www.shorturl.at/utlPE" target="_blank">تحميل كرنل</a></div>
+    <div><a href="#">تحميل كوكودس</a></div>
+    <div><a href="#">تحميل دلتا</a></div>
+    <div><a href="#">تحميل كرنل</a></div>
   </div>
 
-  <!-- قائمة تطبيقات أندرويد -->
   <div class="app-list" id="android">
-    <div>للأسف، لا يوجد حالياً أي هاك</div>
+    <div><a href="#">تطبيق أندرويد 1</a></div>
+    <div><a href="#">تطبيق أندرويد 2</a></div>
   </div>
 
-  <!-- قائمة تطبيقات بي سي -->
   <div class="app-list" id="pc">
-    <div>للأسف، لا يوجد حالياً أي هاك</div>
+    <div><a href="#">PC أداة 1</a></div>
+    <div><a href="#">PC أداة 2</a></div>
   </div>
 
+  <!-- سكربت -->
   <script>
-    // دالة لتبديل القوائم
-    function toggleList(platform) {
-      const allLists = document.querySelectorAll('.app-list');
-      allLists.forEach(list => list.style.display = 'none');
-
-      const selectedList = document.getElementById(platform);
-      selectedList.style.display = 'flex';
-    }
-
-    // دالة لتبديل اللغة
-    function toggleLanguage() {
-      let currentLang = document.querySelector('.language-toggle').textContent;
-      if (currentLang === 'عربي') {
-        document.querySelector('.language-toggle').textContent = 'English';
-        document.getElementById('iosButton').textContent = 'iPhone Apps';
-        document.getElementById('androidButton').textContent = 'Android Apps';
-        document.getElementById('pcButton').textContent = 'PC Apps';
-      } else {
-        document.querySelector('.language-toggle').textContent = 'عربي';
-        document.getElementById('iosButton').textContent = 'تطبيقات ايفون';
-        document.getElementById('androidButton').textContent = 'تطبيقات اندرويد';
-        document.getElementById('pcButton').textContent = 'تطبيقات بي سي';
-      }
-    }
-
-    // دالة لفتح القائمة المنسدلة
     function toggleMenu() {
-      const menu = document.querySelector('.menu-items');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      const menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
     }
 
-    // إضافة فعاليات للقائمة المنسدلة
-    document.addEventListener('DOMContentLoaded', function() {
-      const items = document.querySelectorAll('.menu-items a');
-      items.forEach(item => {
-        item.addEventListener('click', function() {
-          items.forEach(link => link.classList.remove('active'));
-          item.classList.add('active');
-        });
-      });
-    });
-  </script>
+    function toggleList(platform) {
+      const allLists = document.querySelectorAll(".app-list");
+      allLists.forEach(list => list.style.display = "none");
+      document.getElementById(platform).style.display = "flex";
+    }
 
+    function toggleLanguage() {
+      const btn = document.querySelector(".language-toggle");
+      btn.textContent = btn.textContent === "عربي" ? "English" : "عربي";
+    }
+  </script>
 </body>
 </html>
