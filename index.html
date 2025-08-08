@@ -1,137 +1,148 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRIZIX TOP</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #000428, #4e4e4e);
-      color: white;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    h1 {
-      font-size: 70px;
-      color: #ffcc00;
-      text-shadow: 0 0 15px #ffcc00;
-      margin-top: 100px;
-    }
-
-    .button {
-      background-color: #e74c3c;
-      border: none;
-      padding: 20px 60px;
-      font-size: 24px;
-      color: white;
-      text-align: center;
-      cursor: pointer;
-      margin: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #e74c3c;
-      transition: 0.3s;
-      width: 100%;
-    }
-
-    .button:hover {
-      background-color: #c0392b;
-      box-shadow: 0 0 20px #c0392b;
-    }
-
-    /* تصميم القوائم الجانبية */
-    .menu-container {
-      display: none;
-      padding: 20px;
-      width: 80%;
-      max-width: 1000px;
-      margin: 0 auto;
-      background-color: #333;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-      margin-bottom: 30px;
-    }
-
-    /* تصميم الأزرار في القائمة الجانبية */
-    .menu-container a {
-      display: block;
-      font-size: 24px;
-      color: white;
-      text-decoration: none;
-      padding: 15px;
-      border-radius: 8px;
-      margin: 10px 0;
-      transition: background-color 0.3s;
-    }
-
-    .menu-container a:hover {
-      background-color: #c0392b;
-    }
-
-    .social-buttons a {
-      display: inline-block;
-      font-size: 22px;
-      color: white;
-      background-color: #5865F2;
-      padding: 15px 30px;
-      border-radius: 12px;
-      margin-top: 20px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .social-buttons a:hover {
-      background-color: #4e55c4;
-    }
-
-    .social-buttons a.youtube {
-      background-color: #FF0000;
-    }
-
-    .social-buttons a.youtube:hover {
-      background-color: #cc0000;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <h1>CRIZIX TOP</h1>
+    <div id="login-page" class="page">
+        <div class="login-form">
+            <h2>تسجيل الدخول</h2>
+            <input type="text" id="discord-token" placeholder="ادخل توكن Discord">
+            <button id="login-btn">تسجيل الدخول</button>
+        </div>
+    </div>
 
-  <!-- أزرار الانتقال إلى القوائم -->
-  <div>
-    <button class="button" onclick="toggleMenu()">☰ القائمة</button>
-  </div>
+    <div id="dashboard" class="page">
+        <div class="navbar">
+            <div class="nav-items">
+                <a href="#" data-section="settings" class="nav-item active">الإعدادات</a>
+                <a href="#" data-section="notifications" class="nav-item">الإشعارات</a>
+                <a href="#" data-section="logout" class="nav-item">تسجيل الخروج</a>
+            </div>
+        </div>
 
-  <!-- قائمة جانبية -->
-  <div id="sideMenu" class="menu-container">
-    <a href="ios.html">تطبيقات iOS</a>
-    <a href="android.html">تطبيقات Android</a>
-    <a href="pc.html">تطبيقات PC</a>
-    <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
-    <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
-  </div>
+        <div id="settings" class="section active">
+            <h3>الإعدادات</h3>
+            <label class="toggle-switch">
+                <input type="checkbox" id="two-factor-auth">
+                <span class="slider"></span>
+            </label>
+            <span>المصادقة الثنائية</span>
+            <button class="btn" id="change-password-btn"><i class="fas fa-key"></i> تغيير كلمة المرور</button>
+        </div>
 
-  <!-- روابط دعم فني ويوتيوب -->
-  <div class="social-buttons">
-    <a href="https://discord.gg/crizix" target="_blank">ديسكورد</a>
-    <a href="https://youtube.com/@crizix1" target="_blank" class="youtube">يوتيوب</a>
-  </div>
+        <div id="notifications" class="section">
+            <h3>الإشعارات</h3>
+            <label class="toggle-switch">
+                <input type="checkbox" id="notif-messages" checked>
+                <span class="slider"></span>
+            </label>
+            <span>إشعارات الرسائل</span>
 
-  <script>
-    // تفعيل/إخفاء القائمة الجانبية
-    function toggleMenu() {
-      var menu = document.getElementById('sideMenu');
-      if (menu.style.display === 'block') {
-        menu.style.display = 'none';
-      } else {
-        menu.style.display = 'block';
-      }
-    }
-  </script>
+            <label class="toggle-switch">
+                <input type="checkbox" id="notif-mentions" checked>
+                <span class="slider"></span>
+            </label>
+            <span>إشعارات الإشارات</span>
+        </div>
+
+        <div id="logout" class="section">
+            <h3>تسجيل الخروج</h3>
+            <button class="btn" id="logout-btn">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginPage = document.getElementById('login-page');
+            const dashboard = document.getElementById('dashboard');
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const navItems = document.querySelectorAll('.nav-item');
+            const tokenInput = document.getElementById('discord-token');
+
+            let discordToken = null;
+
+            // Login button click handler
+            loginBtn.addEventListener('click', async () => {
+                discordToken = tokenInput.value.trim();
+                if (!discordToken) return;
+
+                loginPage.style.display = 'none';
+                dashboard.style.display = 'flex';
+
+                // Fetch user data or perform login actions
+                try {
+                    const user = await fetchUserData(discordToken);
+                    if (user) {
+                        updateUI();
+                        showToast('تم تسجيل الدخول بنجاح', 'success');
+                    }
+                } catch (error) {
+                    showToast('فشل في تسجيل الدخول', 'error');
+                }
+            });
+
+            // Logout button click handler
+            logoutBtn.addEventListener('click', async () => {
+                discordToken = null;
+                loginPage.style.display = 'flex';
+                dashboard.style.display = 'none';
+
+                showToast('تم تسجيل الخروج بنجاح', 'success');
+            });
+
+            // Navigation items click handlers
+            navItems.forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    navItems.forEach(navItem => navItem.classList.remove('active'));
+                    this.classList.add('active');
+                    const section = this.getAttribute('data-section');
+                    loadSection(section);
+                });
+            });
+
+            // Function to load a specific section in the dashboard
+            function loadSection(section) {
+                const sections = document.querySelectorAll('.section');
+                sections.forEach(sec => sec.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+            }
+
+            // Function to show toast notifications
+            function showToast(message, type) {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+
+            // Fetch user data from Discord API
+            async function fetchUserData(token) {
+                // Perform fetch request to Discord API with token
+                const response = await fetch('https://discord.com/api/v9/users/@me', {
+                    headers: {
+                        'Authorization': `Bot ${token}`
+                    }
+                });
+                return response.json();
+            }
+
+            // Update UI with user info
+            function updateUI() {
+                // Logic to update the UI with user info after login
+            }
+        });
+    </script>
 
 </body>
 </html>
