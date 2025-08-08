@@ -1,148 +1,208 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم ديسكورد</title>
+<style>
+body{font-family:Arial;background:#0f1115;color:#fff;margin:0}
+.page{display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{background:#151821;border:1px solid #23283a;border-radius:14px;padding:18px;width:min(800px,95vw);box-shadow:0 8px 20px rgba(0,0,0,.35);margin-bottom:15px}
+h2,h3,h4{margin:.2rem 0 1rem}
+input,textarea,select,button{width:100%;box-sizing:border-box;margin-bottom:8px}
+input,textarea,select{background:#0c0f16;color:#fff;border:1px solid #2a3046;border-radius:10px;padding:10px 12px;outline:0}
+textarea{resize:vertical;min-height:80px}
+button{background:#3867ff;border:0;border-radius:10px;padding:10px 12px;font-weight:600;cursor:pointer}
+button.secondary{background:#2b2f3f}
+.status{font-size:.9rem;opacity:.85}
+.toast{position:fixed;right:16px;bottom:16px;padding:10px 14px;border-radius:10px;background:#2b2f3f;color:#fff;z-index:9999}
+.toast.success{background:#2b7a3e}.toast.error{background:#a83a3a}
+</style>
 </head>
 <body>
 
-    <div id="login-page" class="page">
-        <div class="login-form">
-            <h2>تسجيل الدخول</h2>
-            <input type="text" id="discord-token" placeholder="ادخل توكن Discord">
-            <button id="login-btn">تسجيل الدخول</button>
-        </div>
-    </div>
+<div id="login-page" class="page">
+  <div class="card">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
+    <button id="login-btn">تسجيل الدخول</button>
+  </div>
+</div>
 
-    <div id="dashboard" class="page">
-        <div class="navbar">
-            <div class="nav-items">
-                <a href="#" data-section="settings" class="nav-item active">الإعدادات</a>
-                <a href="#" data-section="notifications" class="nav-item">الإشعارات</a>
-                <a href="#" data-section="logout" class="nav-item">تسجيل الخروج</a>
-            </div>
-        </div>
+<div id="dashboard" class="page" style="display:none;flex-direction:column;align-items:center">
+  
+  <div class="card">
+    <h3>إرسال رسالة</h3>
+    <input type="text" id="channel-id" placeholder="Channel ID">
+    <textarea id="message-content" placeholder="محتوى الرسالة"></textarea>
+    <button id="send-once-btn">إرسال مرة واحدة</button>
+  </div>
 
-        <div id="settings" class="section active">
-            <h3>الإعدادات</h3>
-            <label class="toggle-switch">
-                <input type="checkbox" id="two-factor-auth">
-                <span class="slider"></span>
-            </label>
-            <span>المصادقة الثنائية</span>
-            <button class="btn" id="change-password-btn"><i class="fas fa-key"></i> تغيير كلمة المرور</button>
-        </div>
+  <div class="card">
+    <h3>سبام الرسائل</h3>
+    <input type="text" id="spam-channel-id" placeholder="Channel ID">
+    <textarea id="spam-message-content" placeholder="محتوى السبام"></textarea>
+    <input type="number" id="spam-count" placeholder="عدد الرسائل" min="1">
+    <input type="number" id="spam-interval" placeholder="الفاصل بالمللي ثانية" min="100">
+    <button id="start-spam-btn">بدء السبام</button>
+    <button id="stop-spam-btn" class="secondary">إيقاف السبام</button>
+    <div id="spam-status" class="status"></div>
+  </div>
 
-        <div id="notifications" class="section">
-            <h3>الإشعارات</h3>
-            <label class="toggle-switch">
-                <input type="checkbox" id="notif-messages" checked>
-                <span class="slider"></span>
-            </label>
-            <span>إشعارات الرسائل</span>
+  <div class="card">
+    <h3>تعديل الحساب</h3>
+    <select id="status-select">
+      <option value="online">🟢 Online</option>
+      <option value="idle">🌙 Idle</option>
+      <option value="dnd">⛔ DND</option>
+      <option value="invisible">⚫ Invisible</option>
+    </select>
+    <input type="text" id="username-input" placeholder="اسم الحساب الجديد">
+    <textarea id="bio-input" placeholder="البايو الجديد"></textarea>
+    <input type="file" id="avatar-input" accept="image/*">
+    <button id="update-profile-btn">تحديث الحساب</button>
+  </div>
 
-            <label class="toggle-switch">
-                <input type="checkbox" id="notif-mentions" checked>
-                <span class="slider"></span>
-            </label>
-            <span>إشعارات الإشارات</span>
-        </div>
+  <div class="card">
+    <button id="logout-btn" class="secondary">تسجيل الخروج</button>
+  </div>
 
-        <div id="logout" class="section">
-            <h3>تسجيل الخروج</h3>
-            <button class="btn" id="logout-btn">تسجيل الخروج</button>
-        </div>
-    </div>
+</div>
 
-    <script src="app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const loginPage = document.getElementById('login-page');
-            const dashboard = document.getElementById('dashboard');
-            const loginBtn = document.getElementById('login-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const navItems = document.querySelectorAll('.nav-item');
-            const tokenInput = document.getElementById('discord-token');
+<script>
+let discordToken=null,spamTimer=null,spamRunning=false;
 
-            let discordToken = null;
+function showToast(msg,type){
+  const t=document.createElement('div');
+  t.className=`toast ${type||''}`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
 
-            // Login button click handler
-            loginBtn.addEventListener('click', async () => {
-                discordToken = tokenInput.value.trim();
-                if (!discordToken) return;
+document.getElementById('login-btn').addEventListener('click',()=>{
+  const t=(document.getElementById('discord-token').value||'').trim();
+  if(!t) return showToast('أدخل التوكن','error');
+  discordToken=t;
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('dashboard').style.display='flex';
+  showToast('تم تسجيل الدخول','success');
+});
 
-                loginPage.style.display = 'none';
-                dashboard.style.display = 'flex';
+document.getElementById('logout-btn').addEventListener('click',()=>{
+  discordToken=null;
+  stopSpam();
+  document.getElementById('login-page').style.display='flex';
+  document.getElementById('dashboard').style.display='none';
+  showToast('تم تسجيل الخروج','success');
+});
 
-                // Fetch user data or perform login actions
-                try {
-                    const user = await fetchUserData(discordToken);
-                    if (user) {
-                        updateUI();
-                        showToast('تم تسجيل الدخول بنجاح', 'success');
-                    }
-                } catch (error) {
-                    showToast('فشل في تسجيل الدخول', 'error');
-                }
-            });
+document.getElementById('send-once-btn').addEventListener('click',async()=>{
+  const cid=(document.getElementById('channel-id').value||'').trim();
+  const content=(document.getElementById('message-content').value||'').trim();
+  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
+  if(!cid||!content) return showToast('أكمل البيانات','error');
+  const ok=await sendMessage(cid,content);
+  if(ok) showToast('تم الإرسال','success');
+});
 
-            // Logout button click handler
-            logoutBtn.addEventListener('click', async () => {
-                discordToken = null;
-                loginPage.style.display = 'flex';
-                dashboard.style.display = 'none';
+document.getElementById('start-spam-btn').addEventListener('click',()=>{
+  const cid=(document.getElementById('spam-channel-id').value||'').trim();
+  const content=(document.getElementById('spam-message-content').value||'').trim();
+  const count=parseInt(document.getElementById('spam-count').value,10);
+  const interval=parseInt(document.getElementById('spam-interval').value,10);
+  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
+  if(!cid||!content||!count||!interval) return showToast('أكمل بيانات السبام','error');
+  if(spamRunning) return showToast('السبام يعمل','error');
+  spamRunning=true;
+  let remaining=count;
+  updateSpamStatus(`بدء السبام... العدد المتبقي: ${remaining}`);
+  spamTimer=setInterval(async()=>{
+    if(!spamRunning) return;
+    if(remaining<=0){stopSpam();updateSpamStatus('اكتمل السبام');showToast('تم الانتهاء','success');return;}
+    const ok=await sendMessage(cid,content);
+    if(!ok){updateSpamStatus('تم الإيقاف بسبب خطأ');stopSpam();return;}
+    remaining--;
+    updateSpamStatus(`جارٍ الإرسال... العدد المتبقي: ${remaining}`);
+  },interval);
+  showToast('بدأ السبام','success');
+});
 
-                showToast('تم تسجيل الخروج بنجاح', 'success');
-            });
+document.getElementById('stop-spam-btn').addEventListener('click',()=>{
+  stopSpam();
+  updateSpamStatus('تم الإيقاف');
+  showToast('تم إيقاف السبام','success');
+});
 
-            // Navigation items click handlers
-            navItems.forEach(item => {
-                item.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    navItems.forEach(navItem => navItem.classList.remove('active'));
-                    this.classList.add('active');
-                    const section = this.getAttribute('data-section');
-                    loadSection(section);
-                });
-            });
+document.getElementById('update-profile-btn').addEventListener('click',async()=>{
+  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
+  const username=(document.getElementById('username-input').value||'').trim();
+  const bio=(document.getElementById('bio-input').value||'').trim();
+  const status=document.getElementById('status-select').value;
+  const avatarFile=document.getElementById('avatar-input').files[0];
 
-            // Function to load a specific section in the dashboard
-            function loadSection(section) {
-                const sections = document.querySelectorAll('.section');
-                sections.forEach(sec => sec.classList.remove('active'));
-                document.getElementById(section).classList.add('active');
-            }
+  // تحديث الحالة
+  await fetch("https://discord.com/api/v10/users/@me/settings",{
+    method:"PATCH",
+    headers:{'Authorization':discordToken,'Content-Type':'application/json'},
+    body:JSON.stringify({status})
+  }).catch(()=>{});
 
-            // Function to show toast notifications
-            function showToast(message, type) {
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.textContent = message;
-                document.body.appendChild(toast);
-                setTimeout(() => {
-                    toast.remove();
-                }, 3000);
-            }
+  // تحديث الاسم + البايو + الصورة
+  let avatarBase64=null;
+  if(avatarFile){
+    avatarBase64=await fileToBase64(avatarFile);
+  }
+  const bodyData={};
+  if(username) bodyData.username=username;
+  if(bio) bodyData.bio=bio;
+  if(avatarBase64) bodyData.avatar=avatarBase64.split(',')[1];
 
-            // Fetch user data from Discord API
-            async function fetchUserData(token) {
-                // Perform fetch request to Discord API with token
-                const response = await fetch('https://discord.com/api/v9/users/@me', {
-                    headers: {
-                        'Authorization': `Bot ${token}`
-                    }
-                });
-                return response.json();
-            }
+  await fetch("https://discord.com/api/v10/users/@me",{
+    method:"PATCH",
+    headers:{'Authorization':discordToken,'Content-Type':'application/json'},
+    body:JSON.stringify(bodyData)
+  }).then(r=>{
+    if(r.ok) showToast('تم تحديث الحساب','success');
+    else showToast('فشل تحديث الحساب','error');
+  }).catch(()=>showToast('خطأ في الاتصال','error'));
+});
 
-            // Update UI with user info
-            function updateUI() {
-                // Logic to update the UI with user info after login
-            }
-        });
-    </script>
+async function sendMessage(cid,content){
+  try{
+    const res=await fetch(`https://discord.com/api/v10/channels/${cid}/messages`,{
+      method:'POST',
+      headers:{'Authorization':`Bot ${discordToken}`,'Content-Type':'application/json'},
+      body:JSON.stringify({content})
+    });
+    if(res.status===429){
+      const data=await res.json().catch(()=>({}));
+      const retry=Math.ceil((data.retry_after||1)*1000);
+      await new Promise(r=>setTimeout(r,retry));
+      return await sendMessage(cid,content);
+    }
+    if(!res.ok) return false;
+    return true;
+  }catch{return false;}
+}
 
+function stopSpam(){
+  if(spamTimer) clearInterval(spamTimer);
+  spamTimer=null;spamRunning=false;
+}
+
+function updateSpamStatus(text){
+  document.getElementById('spam-status').textContent=text||'';
+}
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+</script>
 </body>
 </html>
