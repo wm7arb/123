@@ -80,13 +80,29 @@ function showToast(msg,type){
   setTimeout(()=>t.remove(),2500);
 }
 
-document.getElementById('login-btn').addEventListener('click',()=>{
+async function verifyToken(token){
+  try{
+    const res=await fetch("https://discord.com/api/v10/users/@me",{
+      headers:{'Authorization':token}
+    });
+    if(!res.ok) return null;
+    return await res.json();
+  }catch{return null;}
+}
+
+document.getElementById('login-btn').addEventListener('click',async()=>{
   const t=(document.getElementById('discord-token').value||'').trim();
   if(!t) return showToast('أدخل التوكن','error');
+  showToast('جارٍ التحقق...','');
+  const user=await verifyToken(t);
+  if(!user){
+    showToast('التوكن غير صحيح','error');
+    return;
+  }
   discordToken=t;
   document.getElementById('login-page').style.display='none';
   document.getElementById('dashboard').style.display='flex';
-  showToast('تم تسجيل الدخول','success');
+  showToast(`مرحباً ${user.username}`,'success');
 });
 
 document.getElementById('logout-btn').addEventListener('click',()=>{
@@ -172,7 +188,7 @@ async function sendMessage(cid,content){
   try{
     const res=await fetch(`https://discord.com/api/v10/channels/${cid}/messages`,{
       method:'POST',
-      headers:{'Authorization':`Bot ${discordToken}`,'Content-Type':'application/json'},
+      headers:{'Authorization':discordToken,'Content-Type':'application/json'},
       body:JSON.stringify({content})
     });
     if(res.status===429){
