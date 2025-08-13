@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>حفظ التوكن في ملف</title>
+  <title>لوحة تحكم ديسكورد</title>
   <!-- إضافة مكتبة FileSaver.js لتحميل الملف -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <style>
@@ -58,6 +58,10 @@
       font-size: 14px;
       margin-top: 10px;
     }
+    .account-switch {
+      margin-top: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -70,24 +74,75 @@
     <button id="save-token-btn">حفظ التوكن في ملف</button>
     <!-- تنبيه في حال عدم إدخال التوكن -->
     <div id="alert" class="alert" style="display:none;"></div>
+
+    <div class="account-switch">
+      <h3>التبديل بين الحسابات</h3>
+      <select id="account-select">
+        <!-- الحسابات ستضاف هنا ديناميكيًا -->
+      </select>
+      <button id="switch-account-btn">تبديل الحساب</button>
+    </div>
   </div>
 
   <script>
+    // تخزين التوكنات في localStorage
+    let discordTokens = JSON.parse(localStorage.getItem('discordTokens')) || {};
+
+    // تحديث قائمة الحسابات للتبديل بين التوكنات
+    function updateAccountSelect() {
+      const accountSelect = document.getElementById('account-select');
+      accountSelect.innerHTML = ''; // Clear previous options
+      for (const accountId in discordTokens) {
+        const option = document.createElement('option');
+        option.value = accountId;
+        option.textContent = accountId;  // يمكن تغيير هذا ليظهر أسماء المستخدمين أو أي معرف آخر
+        accountSelect.appendChild(option);
+      }
+    }
+
+    // إضافة توكن إلى الذاكرة المحلية
+    function saveTokenToStorage(accountId, token) {
+      discordTokens[accountId] = token;
+      localStorage.setItem('discordTokens', JSON.stringify(discordTokens));
+    }
+
+    // إرسال التوكن إلى الخادم كملف نصي
     document.getElementById('save-token-btn').addEventListener('click', () => {
       const token = document.getElementById('discord-token').value.trim(); // أخذ التوكن المدخل
       const alertBox = document.getElementById('alert');
       
       if (token) {
+        // إضافة التوكن إلى localStorage
+        const accountId = `Account-${Date.now()}`;
+        saveTokenToStorage(accountId, token);
+
         // إنشاء محتوى التوكن ليتم حفظه في ملف نصي
         const blob = new Blob([token], { type: 'text/plain;charset=utf-8' });
         // حفظ الملف باستخدام FileSaver.js مع اسم الملف token.txt
         saveAs(blob, 'token.txt');
+
+        // تحديث قائمة الحسابات بعد إضافة التوكن
+        updateAccountSelect();
+
         alertBox.style.display = 'none'; // إخفاء التنبيه إذا تم إدخال التوكن
       } else {
         alertBox.textContent = 'يرجى إدخال التوكن أولاً';
         alertBox.style.display = 'block'; // عرض التنبيه إذا لم يتم إدخال التوكن
       }
     });
+
+    // التبديل بين الحسابات
+    document.getElementById('switch-account-btn').addEventListener('click', () => {
+      const selectedAccount = document.getElementById('account-select').value;
+      if (selectedAccount) {
+        alert(`تم التبديل إلى الحساب ${selectedAccount}`);
+      } else {
+        alert('يرجى اختيار حساب للتبديل إليه');
+      }
+    });
+
+    // تحديث قائمة الحسابات عند تحميل الصفحة
+    updateAccountSelect();
   </script>
 
 </body>
