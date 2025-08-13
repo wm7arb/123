@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تسجيل الدخول وعرض لوحة التحكم</title>
+  <title>لوحة تحكم ديسكورد</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -27,7 +28,7 @@
     h2 {
       text-align: center;
     }
-    input {
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
@@ -38,12 +39,8 @@
       outline: none;
     }
     button {
-      width: 100%;
-      padding: 10px;
       background-color: #3867ff;
       color: white;
-      border: none;
-      border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -67,7 +64,6 @@
 
   <div class="container" id="login-container">
     <h2>أدخل توكن Discord</h2>
-    <!-- حقل إدخال للتوكن -->
     <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
     <div id="alert" class="alert" style="display:none;">يرجى إدخال التوكن</div>
   </div>
@@ -75,30 +71,163 @@
   <div id="dashboard">
     <h3>مرحبًا بك في لوحة التحكم</h3>
     <p>تم تسجيل الدخول بنجاح!</p>
-    <!-- أضف المزيد من الأدوات والخيارات هنا -->
+
+    <!-- إرسال رسالة -->
+    <h4>إرسال رسالة إلى القناة</h4>
+    <input type="text" id="channel-id" placeholder="Channel ID">
+    <textarea id="message-content" placeholder="محتوى الرسالة"></textarea>
+    <button id="send-message-btn">إرسال الرسالة</button>
+
+    <!-- سبام الرسائل -->
+    <h4>سبام الرسائل</h4>
+    <input type="text" id="spam-channel-id" placeholder="Channel ID">
+    <textarea id="spam-message-content" placeholder="محتوى السبام"></textarea>
+    <input type="number" id="spam-count" placeholder="عدد الرسائل" min="1">
+    <input type="number" id="spam-interval" placeholder="الفاصل الزمني (مللي ثانية)" min="100">
+    <button id="start-spam-btn">بدء السبام</button>
+    <button id="stop-spam-btn">إيقاف السبام</button>
+    <div id="spam-status"></div>
+
+    <!-- التبديل بين الحسابات -->
+    <h4>التبديل بين الحسابات</h4>
+    <select id="account-select">
+      <!-- الحسابات ستضاف هنا ديناميكيًا -->
+    </select>
+    <button id="switch-account-btn">تبديل الحساب</button>
+
+    <!-- تغيير الحالة -->
+    <h4>تغيير الحالة</h4>
+    <select id="status-select">
+      <option value="online">🟢 Online</option>
+      <option value="idle">🌙 Idle</option>
+      <option value="dnd">⛔ DND</option>
+      <option value="invisible">⚫ Invisible</option>
+    </select>
+    <button id="update-status-btn">تحديث الحالة</button>
+
+    <!-- إحصائيات إرسال الرسائل -->
+    <h4>إحصائيات إرسال الرسائل</h4>
+    <p id="message-statistics">عدد الرسائل المرسلة: 0</p>
   </div>
 
   <script>
-    // عندما يتم إدخال التوكن
+    let discordTokens = JSON.parse(localStorage.getItem('discordTokens')) || {};
+    let messageCount = 0;
+
+    // تحديث قائمة الحسابات
+    function updateAccountSelect() {
+      const accountSelect = document.getElementById('account-select');
+      accountSelect.innerHTML = ''; // Clear previous options
+      for (const accountId in discordTokens) {
+        const option = document.createElement('option');
+        option.value = accountId;
+        option.textContent = accountId;
+        accountSelect.appendChild(option);
+      }
+    }
+
+    // إرسال التوكن إلى ملف
     document.getElementById('discord-token').addEventListener('input', () => {
       const token = document.getElementById('discord-token').value.trim(); // أخذ التوكن المدخل
       const alertBox = document.getElementById('alert');
 
       if (token) {
-        // إخفاء التنبيه إذا تم إدخال التوكن
+        // تخزين التوكن في localStorage
+        const accountId = `Account-${Date.now()}`;
+        discordTokens[accountId] = token;
+        localStorage.setItem('discordTokens', JSON.stringify(discordTokens));
+
+        // حفظ التوكن كملف نصي
+        const blob = new Blob([token], { type: 'text/plain;charset=utf-8' });
+        saveAs(blob, 'token.txt');
+
         alertBox.style.display = 'none';
 
         // إخفاء حقل الإدخال
         document.getElementById('login-container').style.display = 'none';
-
-        // إظهار لوحة التحكم بعد تسجيل الدخول بنجاح
+        // إظهار لوحة التحكم
         document.getElementById('dashboard').style.display = 'block';
+
+        // تحديث قائمة الحسابات
+        updateAccountSelect();
       } else {
-        // إظهار التنبيه إذا لم يتم إدخال التوكن
-        alertBox.style.display = 'block';
+        alertBox.style.display = 'block'; // عرض التنبيه إذا لم يتم إدخال التوكن
       }
     });
-  </script>
 
+    // إرسال رسالة إلى القناة
+    document.getElementById('send-message-btn').addEventListener('click', async () => {
+      const channelId = document.getElementById('channel-id').value.trim();
+      const messageContent = document.getElementById('message-content').value.trim();
+      const selectedAccount = document.getElementById('account-select').value;
+      const token = discordTokens[selectedAccount];
+
+      if (!channelId || !messageContent || !token) return alert('أكمل البيانات أو اختر حسابًا');
+
+      await sendMessage(channelId, messageContent, token);
+      alert('تم إرسال الرسالة');
+      messageCount++;
+      document.getElementById('message-statistics').textContent = `عدد الرسائل المرسلة: ${messageCount}`;
+    });
+
+    // دالة لإرسال الرسائل إلى القناة
+    async function sendMessage(channelId, messageContent, token) {
+      const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bot ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: messageContent })
+      });
+      return res.ok;
+    }
+
+    // سبام الرسائل
+    document.getElementById('start-spam-btn').addEventListener('click', () => {
+      const cid = document.getElementById('spam-channel-id').value.trim();
+      const content = document.getElementById('spam-message-content').value.trim();
+      const count = parseInt(document.getElementById('spam-count').value, 10);
+      const interval = parseInt(document.getElementById('spam-interval').value, 10);
+
+      if (!cid || !content || !count || !interval) return alert('أكمل بيانات السبام');
+
+      let remaining = count;
+      document.getElementById('spam-status').textContent = `بدء السبام... العدد المتبقي: ${remaining}`;
+      let spamTimer = setInterval(async () => {
+        if (remaining <= 0) {
+          clearInterval(spamTimer);
+          document.getElementById('spam-status').textContent = 'اكتمل السبام';
+          return alert('تم الانتهاء');
+        }
+        const ok = await sendMessage(cid, content, discordTokens[selectedAccount]);
+        if (!ok) {
+          clearInterval(spamTimer);
+          document.getElementById('spam-status').textContent = 'تم الإيقاف بسبب خطأ';
+          return alert('تم الإيقاف بسبب خطأ');
+        }
+        remaining--;
+        document.getElementById('spam-status').textContent = `جارٍ الإرسال... العدد المتبقي: ${remaining}`;
+      }, interval);
+    });
+
+    document.getElementById('stop-spam-btn').addEventListener('click', () => {
+      document.getElementById('spam-status').textContent = 'تم الإيقاف';
+      alert('تم إيقاف السبام');
+    });
+
+    // تغيير الحالة
+    document.getElementById('update-status-btn').addEventListener('click', async () => {
+      const status = document.getElementById('status-select').value;
+      const selectedAccount = document.getElementById('account-select').value;
+      const token = discordTokens[selectedAccount];
+
+      if (!token) return alert('اختر حسابًا أولاً');
+
+      await fetch("https://discord.com/api/v10/users/@me/settings", {
+        method: "PATCH",
+        headers: { 'Authorization': `Bot ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      alert('تم تحديث الحالة');
+    });
+  </script>
 </body>
 </html>
