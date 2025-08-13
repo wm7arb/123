@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
@@ -65,7 +65,8 @@
   <div class="container" id="login-container">
     <h2>أدخل توكن Discord</h2>
     <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
-    <div id="alert" class="alert" style="display:none;">يرجى إدخال التوكن</div>
+    <button id="login-btn">تسجيل الدخول</button>
+    <div id="alert" class="alert" style="display:none;">التوكن غير صحيح، يرجى المحاولة مرة أخرى.</div>
   </div>
 
   <div id="dashboard">
@@ -105,129 +106,135 @@
     </select>
     <button id="update-status-btn">تحديث الحالة</button>
 
-    <!-- إحصائيات إرسال الرسائل -->
-    <h4>إحصائيات إرسال الرسائل</h4>
-    <p id="message-statistics">عدد الرسائل المرسلة: 0</p>
   </div>
 
   <script>
+    let discordToken = null;
     let discordTokens = JSON.parse(localStorage.getItem('discordTokens')) || {};
-    let messageCount = 0;
 
-    // تحديث قائمة الحسابات
-    function updateAccountSelect() {
-      const accountSelect = document.getElementById('account-select');
-      accountSelect.innerHTML = ''; // Clear previous options
-      for (const accountId in discordTokens) {
-        const option = document.createElement('option');
-        option.value = accountId;
-        option.textContent = accountId;
-        accountSelect.appendChild(option);
+    function showToast(msg, type) {
+      const t = document.createElement('div');
+      t.className = `toast ${type || ''}`;
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    async function verifyToken(token) {
+      try {
+        const res = await fetch("https://discord.com/api/v10/users/@me", {
+          headers: { 'Authorization': `Bot ${token}` }
+        });
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (error) {
+        return null;
       }
     }
 
-    // إرسال التوكن إلى ملف
-    document.getElementById('discord-token').addEventListener('input', () => {
-      const token = document.getElementById('discord-token').value.trim(); // أخذ التوكن المدخل
-      const alertBox = document.getElementById('alert');
+    document.getElementById('login-btn').addEventListener('click', async () => {
+      const token = (document.getElementById('discord-token').value || '').trim();
+      if (!token) return showToast('أدخل التوكن', 'error');
 
-      if (token) {
-        // تخزين التوكن في localStorage
-        const accountId = `Account-${Date.now()}`;
-        discordTokens[accountId] = token;
-        localStorage.setItem('discordTokens', JSON.stringify(discordTokens));
+      showToast('جارٍ التحقق...', '');
 
-        // حفظ التوكن كملف نصي
-        const blob = new Blob([token], { type: 'text/plain;charset=utf-8' });
-        saveAs(blob, 'token.txt');
-
-        alertBox.style.display = 'none';
-
-        // إخفاء حقل الإدخال
-        document.getElementById('login-container').style.display = 'none';
-        // إظهار لوحة التحكم
-        document.getElementById('dashboard').style.display = 'block';
-
-        // تحديث قائمة الحسابات
-        updateAccountSelect();
-      } else {
-        alertBox.style.display = 'block'; // عرض التنبيه إذا لم يتم إدخال التوكن
+      const user = await verifyToken(token);
+      if (!user) {
+        showToast('التوكن غير صحيح', 'error');
+        return;
       }
+
+      discordToken = token;
+      discordTokens[`Account-${Date.now()}`] = token;
+      localStorage.setItem('discordTokens', JSON.stringify(discordTokens));
+
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'flex';
+      showToast(`مرحباً ${user.username}`, 'success');
     });
 
     // إرسال رسالة إلى القناة
     document.getElementById('send-message-btn').addEventListener('click', async () => {
-      const channelId = document.getElementById('channel-id').value.trim();
-      const messageContent = document.getElementById('message-content').value.trim();
-      const selectedAccount = document.getElementById('account-select').value;
-      const token = discordTokens[selectedAccount];
+      const channelId = (document.getElementById('channel-id').value || '').trim();
+      const messageContent = (document.getElementById('message-content').value || '').trim();
 
-      if (!channelId || !messageContent || !token) return alert('أكمل البيانات أو اختر حسابًا');
+      if (!discordToken) return showToast('سجّل الدخول أولاً', 'error');
+      if (!channelId || !messageContent) return showToast('أكمل البيانات', 'error');
 
-      await sendMessage(channelId, messageContent, token);
-      alert('تم إرسال الرسالة');
-      messageCount++;
-      document.getElementById('message-statistics').textContent = `عدد الرسائل المرسلة: ${messageCount}`;
+      const res = await sendMessage(channelId, messageContent);
+      if (res) showToast('تم الإرسال', 'success');
+      else showToast('فشل الإرسال', 'error');
     });
 
-    // دالة لإرسال الرسائل إلى القناة
-    async function sendMessage(channelId, messageContent, token) {
-      const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bot ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: messageContent })
-      });
-      return res.ok;
+    // دالة لإرسال الرسائل
+    async function sendMessage(channelId, messageContent) {
+      try {
+        const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bot ${discordToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: messageContent })
+        });
+        return res.ok;
+      } catch {
+        return false;
+      }
     }
 
     // سبام الرسائل
     document.getElementById('start-spam-btn').addEventListener('click', () => {
-      const cid = document.getElementById('spam-channel-id').value.trim();
-      const content = document.getElementById('spam-message-content').value.trim();
+      const cid = (document.getElementById('spam-channel-id').value || '').trim();
+      const content = (document.getElementById('spam-message-content').value || '').trim();
       const count = parseInt(document.getElementById('spam-count').value, 10);
       const interval = parseInt(document.getElementById('spam-interval').value, 10);
 
-      if (!cid || !content || !count || !interval) return alert('أكمل بيانات السبام');
+      if (!cid || !content || !count || !interval) return showToast('أكمل بيانات السبام', 'error');
 
       let remaining = count;
-      document.getElementById('spam-status').textContent = `بدء السبام... العدد المتبقي: ${remaining}`;
+      updateSpamStatus(`بدء السبام... العدد المتبقي: ${remaining}`);
       let spamTimer = setInterval(async () => {
         if (remaining <= 0) {
           clearInterval(spamTimer);
-          document.getElementById('spam-status').textContent = 'اكتمل السبام';
-          return alert('تم الانتهاء');
+          updateSpamStatus('اكتمل السبام');
+          showToast('تم الانتهاء', 'success');
+          return;
         }
-        const ok = await sendMessage(cid, content, discordTokens[selectedAccount]);
+
+        const ok = await sendMessage(cid, content);
         if (!ok) {
+          updateSpamStatus('تم الإيقاف بسبب خطأ');
           clearInterval(spamTimer);
-          document.getElementById('spam-status').textContent = 'تم الإيقاف بسبب خطأ';
-          return alert('تم الإيقاف بسبب خطأ');
+          return showToast('تم الإيقاف بسبب خطأ', 'error');
         }
+
         remaining--;
-        document.getElementById('spam-status').textContent = `جارٍ الإرسال... العدد المتبقي: ${remaining}`;
+        updateSpamStatus(`جارٍ الإرسال... العدد المتبقي: ${remaining}`);
       }, interval);
+      showToast('بدأ السبام', 'success');
     });
 
     document.getElementById('stop-spam-btn').addEventListener('click', () => {
-      document.getElementById('spam-status').textContent = 'تم الإيقاف';
-      alert('تم إيقاف السبام');
+      clearInterval(spamTimer);
+      updateSpamStatus('تم الإيقاف');
+      showToast('تم إيقاف السبام', 'success');
     });
 
-    // تغيير الحالة
+    // تغيير حالة الحساب
     document.getElementById('update-status-btn').addEventListener('click', async () => {
       const status = document.getElementById('status-select').value;
-      const selectedAccount = document.getElementById('account-select').value;
-      const token = discordTokens[selectedAccount];
 
-      if (!token) return alert('اختر حسابًا أولاً');
+      if (!discordToken) return showToast('سجّل الدخول أولاً', 'error');
 
       await fetch("https://discord.com/api/v10/users/@me/settings", {
         method: "PATCH",
-        headers: { 'Authorization': `Bot ${token}`, 'Content-Type': 'application/json' },
+        headers: { 'Authorization': `Bot ${discordToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
-      alert('تم تحديث الحالة');
+      showToast('تم تحديث الحالة', 'success');
     });
+
+    function updateSpamStatus(text) {
+      document.getElementById('spam-status').textContent = text || '';
+    }
   </script>
 </body>
 </html>
