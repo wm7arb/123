@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>حفظ التوكن تلقائيًا وعرض لوحة التحكم</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <title>تسجيل الدخول وعرض لوحة التحكم</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -68,6 +67,7 @@
 
   <div class="container" id="login-container">
     <h2>أدخل توكن Discord</h2>
+    <!-- حقل إدخال للتوكن -->
     <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
     <div id="alert" class="alert" style="display:none;">يرجى إدخال التوكن</div>
   </div>
@@ -85,19 +85,13 @@
       const alertBox = document.getElementById('alert');
 
       if (token) {
-        // تخزين التوكن في localStorage
-        localStorage.setItem('discordToken', token);
-
-        // إنشاء محتوى التوكن ليتم حفظه في ملف نصي
-        const blob = new Blob([token], { type: 'text/plain;charset=utf-8' });
-        // حفظ الملف باستخدام FileSaver.js مع اسم الملف token.txt
-        saveAs(blob, 'token.txt');
-
-        // إخفاء التنبيه
+        // إخفاء التنبيه إذا تم إدخال التوكن
         alertBox.style.display = 'none';
 
-        // إظهار لوحة التحكم
+        // إخفاء حقل الإدخال
         document.getElementById('login-container').style.display = 'none';
+
+        // إظهار لوحة التحكم بعد تسجيل الدخول بنجاح
         document.getElementById('dashboard').style.display = 'block';
       } else {
         // إظهار التنبيه إذا لم يتم إدخال التوكن
