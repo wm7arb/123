@@ -1,225 +1,263 @@
-‏<!DOCTYPE html>
-‏<html lang="ar">
-‏<head>
-‏<meta charset="UTF-8">
-‏<meta name="viewport" content="width=device-width, initial-scale=1.0">
-‏<title>لوحة تحكم ديسكورد</title>
-‏<style>
-‏body{font-family:Arial;background:#0f1115;color:#fff;margin:0}
-‏.page{display:flex;justify-content:center;align-items:center;min-height:100vh}
-‏.card{background:#151821;border:1px solid #23283a;border-radius:14px;padding:18px;width:min(800px,95vw);box-shadow:0 8px 20px rgba(0,0,0,.35);margin-bottom:15px}
-‏h2,h3,h4{margin:.2rem 0 1rem}
-‏input,textarea,select,button{width:100%;box-sizing:border-box;margin-bottom:8px}
-‏input,textarea,select{background:#0c0f16;color:#fff;border:1px solid #2a3046;border-radius:10px;padding:10px 12px;outline:0}
-‏textarea{resize:vertical;min-height:80px}
-‏button{background:#3867ff;border:0;border-radius:10px;padding:10px 12px;font-weight:600;cursor:pointer}
-‏button.secondary{background:#2b2f3f}
-‏.status{font-size:.9rem;opacity:.85}
-‏.toast{position:fixed;right:16px;bottom:16px;padding:10px 14px;border-radius:10px;background:#2b2f3f;color:#fff;z-index:9999}
-‏.toast.success{background:#2b7a3e}.toast.error{background:#a83a3a}
-‏</style>
-‏</head>
-‏<body>
-
-‏<div id="login-page" class="page">
-‏  <div class="card">
-‏    <h2>تسجيل الدخول</h2>
-‏    <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
-‏    <button id="login-btn">تسجيل الدخول</button>
-‏  </div>
-‏</div>
-
-‏<div id="dashboard" class="page" style="display:none;flex-direction:column;align-items:center">
-  
-‏  <div class="card">
-‏    <h3>إرسال رسالة</h3>
-‏    <input type="text" id="channel-id" placeholder="Channel ID">
-‏    <textarea id="message-content" placeholder="محتوى الرسالة"></textarea>
-‏    <button id="send-once-btn">إرسال مرة واحدة</button>
-‏  </div>
-
-‏  <div class="card">
-‏    <h3>سبام الرسائل</h3>
-‏    <input type="text" id="spam-channel-id" placeholder="Channel ID">
-‏    <textarea id="spam-message-content" placeholder="محتوى السبام"></textarea>
-‏    <input type="number" id="spam-count" placeholder="عدد الرسائل" min="1">
-‏    <input type="number" id="spam-interval" placeholder="الفاصل بالمللي ثانية" min="100">
-‏    <button id="start-spam-btn">بدء السبام</button>
-‏    <button id="stop-spam-btn" class="secondary">إيقاف السبام</button>
-‏    <div id="spam-status" class="status"></div>
-‏  </div>
-
-‏  <div class="card">
-‏    <h3>تعديل الحساب</h3>
-‏    <select id="status-select">
-‏      <option value="online">🟢 Online</option>
-‏      <option value="idle">🌙 Idle</option>
-‏      <option value="dnd">⛔ DND</option>
-‏      <option value="invisible">⚫ Invisible</option>
-‏    </select>
-‏    <input type="text" id="username-input" placeholder="اسم الحساب الجديد">
-‏    <textarea id="bio-input" placeholder="البايو الجديد"></textarea>
-‏    <input type="file" id="avatar-input" accept="image/*">
-‏    <button id="update-profile-btn">تحديث الحساب</button>
-‏  </div>
-
-‏  <div class="card">
-‏    <button id="logout-btn" class="secondary">تسجيل الخروج</button>
-‏  </div>
-
-‏</div>
-
-‏<script>
-‏let discordToken=null,spamTimer=null,spamRunning=false;
-
-‏function showToast(msg,type){
-‏  const t=document.createElement('div');
-‏  t.className=`toast ${type||''}`;
-‏  t.textContent=msg;
-‏  document.body.appendChild(t);
-‏  setTimeout(()=>t.remove(),2500);
-}
-
-‏async function verifyToken(token){
-‏  try{
-‏    const res=await fetch("https://discord.com/api/v10/users/@me",{
-‏      headers:{'Authorization':token}
-    });
-‏    if(!res.ok) return null;
-‏    return await res.json();
-‏  }catch{return null;}
-}
-
-‏document.getElementById('login-btn').addEventListener('click',async()=>{
-‏  const t=(document.getElementById('discord-token').value||'').trim();
-‏  if(!t) return showToast('أدخل التوكن','error');
-‏  showToast('جارٍ التحقق...','');
-‏  const user=await verifyToken(t);
-‏  if(!user){
-‏    showToast('التوكن غير صحيح','error');
-‏    return;
-  }
-‏  discordToken=t;
-‏  document.getElementById('login-page').style.display='none';
-‏  document.getElementById('dashboard').style.display='flex';
-‏  showToast(`مرحباً ${user.username}`,'success');
-});
-
-‏document.getElementById('logout-btn').addEventListener('click',()=>{
-‏  discordToken=null;
-‏  stopSpam();
-‏  document.getElementById('login-page').style.display='flex';
-‏  document.getElementById('dashboard').style.display='none';
-‏  showToast('تم تسجيل الخروج','success');
-});
-
-‏document.getElementById('send-once-btn').addEventListener('click',async()=>{
-‏  const cid=(document.getElementById('channel-id').value||'').trim();
-‏  const content=(document.getElementById('message-content').value||'').trim();
-‏  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
-‏  if(!cid||!content) return showToast('أكمل البيانات','error');
-‏  const ok=await sendMessage(cid,content);
-‏  if(ok) showToast('تم الإرسال','success');
-});
-
-‏document.getElementById('start-spam-btn').addEventListener('click',()=>{
-‏  const cid=(document.getElementById('spam-channel-id').value||'').trim();
-‏  const content=(document.getElementById('spam-message-content').value||'').trim();
-‏  const count=parseInt(document.getElementById('spam-count').value,10);
-‏  const interval=parseInt(document.getElementById('spam-interval').value,10);
-‏  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
-‏  if(!cid||!content||!count||!interval) return showToast('أكمل بيانات السبام','error');
-‏  if(spamRunning) return showToast('السبام يعمل','error');
-‏  spamRunning=true;
-‏  let remaining=count;
-‏  updateSpamStatus(`بدء السبام... العدد المتبقي: ${remaining}`);
-‏  spamTimer=setInterval(async()=>{
-‏    if(!spamRunning) return;
-‏    if(remaining<=0){stopSpam();updateSpamStatus('اكتمل السبام');showToast('تم الانتهاء','success');return;}
-‏    const ok=await sendMessage(cid,content);
-‏    if(!ok){updateSpamStatus('تم الإيقاف بسبب خطأ');stopSpam();return;}
-‏    remaining--;
-‏    updateSpamStatus(`جارٍ الإرسال... العدد المتبقي: ${remaining}`);
-‏  },interval);
-‏  showToast('بدأ السبام','success');
-});
-
-‏document.getElementById('stop-spam-btn').addEventListener('click',()=>{
-‏  stopSpam();
-‏  updateSpamStatus('تم الإيقاف');
-‏  showToast('تم إيقاف السبام','success');
-});
-
-‏document.getElementById('update-profile-btn').addEventListener('click',async()=>{
-‏  if(!discordToken) return showToast('سجّل الدخول أولاً','error');
-‏  const username=(document.getElementById('username-input').value||'').trim();
-‏  const bio=(document.getElementById('bio-input').value||'').trim();
-‏  const status=document.getElementById('status-select').value;
-‏  const avatarFile=document.getElementById('avatar-input').files[0];
-
-  // تحديث الحالة
-‏  await fetch("https://discord.com/api/v10/users/@me/settings",{
-‏    method:"PATCH",
-‏    headers:{'Authorization':discordToken,'Content-Type':'application/json'},
-‏    body:JSON.stringify({status})
-‏  }).catch(()=>{});
-
-  // تحديث الاسم + البايو + الصورة
-‏  let avatarBase64=null;
-‏  if(avatarFile){
-‏    avatarBase64=await fileToBase64(avatarFile);
-  }
-‏  const bodyData={};
-‏  if(username) bodyData.username=username;
-‏  if(bio) bodyData.bio=bio;
-‏  if(avatarBase64) bodyData.avatar=avatarBase64.split(',')[1];
-
-‏  await fetch("https://discord.com/api/v10/users/@me",{
-‏    method:"PATCH",
-‏    headers:{'Authorization':discordToken,'Content-Type':'application/json'},
-‏    body:JSON.stringify(bodyData)
-‏  }).then(r=>{
-‏    if(r.ok) showToast('تم تحديث الحساب','success');
-‏    else showToast('فشل تحديث الحساب','error');
-‏  }).catch(()=>showToast('خطأ في الاتصال','error'));
-});
-
-‏async function sendMessage(cid,content){
-‏  try{
-‏    const res=await fetch(`https://discord.com/api/v10/channels/${cid}/messages`,{
-‏      method:'POST',
-‏      headers:{'Authorization':discordToken,'Content-Type':'application/json'},
-‏      body:JSON.stringify({content})
-    });
-‏    if(res.status===429){
-‏      const data=await res.json().catch(()=>({}));
-‏      const retry=Math.ceil((data.retry_after||1)*1000);
-‏      await new Promise(r=>setTimeout(r,retry));
-‏      return await sendMessage(cid,content);
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم ديسكورد</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f1115;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-‏    if(!res.ok) return false;
-‏    return true;
-‏  }catch{return false;}
+    .page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .card {
+      background: #151821;
+      border: 1px solid #23283a;
+      border-radius: 14px;
+      padding: 18px;
+      width: min(800px, 95vw);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+      margin-bottom: 15px;
+    }
+    h2, h3, h4 {
+      margin: .2rem 0 1rem;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+    }
+    input, textarea, select {
+      background: #0c0f16;
+      color: #fff;
+      border: 1px solid #2a3046;
+      border-radius: 10px;
+      padding: 10px 12px;
+      outline: 0;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      background: #3867ff;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: #2b2f3f;
+    }
+    .status {
+      font-size: .9rem;
+      opacity: .85;
+    }
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #2b2f3f;
+      color: #fff;
+      z-index: 9999;
+    }
+    .toast.success {
+      background: #2b7a3e;
+    }
+    .toast.error {
+      background: #a83a3a;
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-page" class="page">
+  <div class="card">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="discord-token" placeholder="أدخل توكن Discord">
+    <button id="login-btn">تسجيل الدخول</button>
+    <div id="alert" class="toast error" style="display:none;">التوكن غير صحيح</div>
+  </div>
+</div>
+
+<div id="dashboard" class="page" style="display:none;">
+  <div class="card">
+    <h3>مرحبًا بك في لوحة التحكم</h3>
+    <p id="user-name">مرحبًا! من فضلك قم بتسجيل الدخول</p>
+    <button id="logout-btn" class="secondary">تسجيل الخروج</button>
+  </div>
+
+  <div class="card">
+    <h4>إرسال رسالة</h4>
+    <input type="text" id="channel-id" placeholder="Channel ID">
+    <textarea id="message-content" placeholder="محتوى الرسالة"></textarea>
+    <button id="send-once-btn">إرسال مرة واحدة</button>
+  </div>
+
+  <div class="card">
+    <h4>سبام الرسائل</h4>
+    <input type="text" id="spam-channel-id" placeholder="Channel ID">
+    <textarea id="spam-message-content" placeholder="محتوى السبام"></textarea>
+    <input type="number" id="spam-count" placeholder="عدد الرسائل" min="1">
+    <input type="number" id="spam-interval" placeholder="الفاصل الزمني (مللي ثانية)" min="100">
+    <button id="start-spam-btn">بدء السبام</button>
+    <button id="stop-spam-btn" class="secondary">إيقاف السبام</button>
+    <div id="spam-status" class="status"></div>
+  </div>
+
+</div>
+
+<script>
+let discordToken = null, spamTimer = null, spamRunning = false;
+
+function showToast(msg, type) {
+  const t = document.createElement('div');
+  t.className = `toast ${type || ''}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
 }
 
-‏function stopSpam(){
-‏  if(spamTimer) clearInterval(spamTimer);
-‏  spamTimer=null;spamRunning=false;
+async function verifyToken(token) {
+  try {
+    const res = await fetch("https://discord.com/api/v10/users/@me", {
+      headers: { 'Authorization': `Bot ${token}` }
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
 }
 
-‏function updateSpamStatus(text){
-‏  document.getElementById('spam-status').textContent=text||'';
+document.getElementById('login-btn').addEventListener('click', async () => {
+  const t = (document.getElementById('discord-token').value || '').trim();
+  if (!t) return showToast('أدخل التوكن', 'error');
+  showToast('جارٍ التحقق...', '');
+  const user = await verifyToken(t);
+  if (!user) {
+    showToast('التوكن غير صحيح', 'error');
+    return;
+  }
+  discordToken = t;
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'flex';
+  document.getElementById('user-name').textContent = `مرحبًا ${user.username}`;
+  showToast(`مرحبًا ${user.username}`, 'success');
+});
+
+// إرسال رسالة واحدة
+document.getElementById('send-once-btn').addEventListener('click', async () => {
+  const cid = (document.getElementById('channel-id').value || '').trim();
+  const content = (document.getElementById('message-content').value || '').trim();
+  if (!discordToken) return showToast('سجّل الدخول أولاً', 'error');
+  if (!cid || !content) return showToast('أكمل البيانات', 'error');
+  
+  const response = await sendMessage(cid, content);
+  if (response.success) {
+    showToast('تم إرسال الرسالة', 'success');
+  } else {
+    showToast('فشل في إرسال الرسالة', 'error');
+  }
+});
+
+// إرسال سبام
+document.getElementById('start-spam-btn').addEventListener('click', async () => {
+  const cid = (document.getElementById('spam-channel-id').value || '').trim();
+  const content = (document.getElementById('spam-message-content').value || '').trim();
+  const count = parseInt(document.getElementById('spam-count').value, 10);
+  const interval = parseInt(document.getElementById('spam-interval').value, 10);
+
+  if (!discordToken) return showToast('سجّل الدخول أولاً', 'error');
+  if (!cid || !content || !count || !interval) return showToast('أكمل بيانات السبام', 'error');
+  if (spamRunning) return showToast('السبام يعمل بالفعل', 'error');
+  
+  spamRunning = true;
+  let remaining = count;
+  updateSpamStatus(`بدء السبام... العدد المتبقي: ${remaining}`);
+  
+  spamTimer = setInterval(async () => {
+    if (!spamRunning) return;
+    if (remaining <= 0) {
+      stopSpam();
+      updateSpamStatus('اكتمل السبام');
+      showToast('تم الانتهاء من السبام', 'success');
+      return;
+    }
+    const response = await sendMessage(cid, content);
+    if (!response.success) {
+      stopSpam();
+      updateSpamStatus('تم الإيقاف بسبب خطأ');
+      showToast('حدث خطأ أثناء السبام', 'error');
+      return;
+    }
+    remaining--;
+    updateSpamStatus(`جارٍ الإرسال... العدد المتبقي: ${remaining}`);
+  }, interval);
+
+  showToast('بدأ السبام', 'success');
+});
+
+// إيقاف السبام
+document.getElementById('stop-spam-btn').addEventListener('click', () => {
+  stopSpam();
+  updateSpamStatus('تم إيقاف السبام');
+  showToast('تم إيقاف السبام', 'success');
+});
+
+// إيقاف السبام
+function stopSpam() {
+  if (spamTimer) clearInterval(spamTimer);
+  spamTimer = null;
+  spamRunning = false;
 }
 
-‏function fileToBase64(file){
-‏  return new Promise((resolve,reject)=>{
-‏    const reader=new FileReader();
-‏    reader.onload=()=>resolve(reader.result);
-‏    reader.onerror=reject;
-‏    reader.readAsDataURL(file);
-  });
+// تحديث حالة السبام
+function updateSpamStatus(text) {
+  document.getElementById('spam-status').textContent = text || '';
 }
-‏</script>
-‏</body>
-‏</html>
- 
+
+// إرسال رسالة عبر API
+async function sendMessage(cid, content) {
+  try {
+    const res = await fetch(`https://discord.com/api/v10/channels/${cid}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bot ${discordToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ content })
+    });
+
+    if (res.status === 429) {
+      const data = await res.json();
+      const retry = Math.ceil((data.retry_after || 1) * 1000);
+      await new Promise(r => setTimeout(r, retry));
+      return await sendMessage(cid, content);
+    }
+
+    if (!res.ok) {
+      return { success: false };
+    }
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
+}
+</script>
+</body>
+</html>
