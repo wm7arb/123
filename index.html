@@ -121,6 +121,19 @@
     <div id="spam-status" class="status"></div>
   </div>
 
+  <div class="card">
+    <h4>تغيير بيانات الحساب</h4>
+    <input type="text" id="username-input" placeholder="اسم الحساب الجديد">
+    <textarea id="bio-input" placeholder="البايو الجديد"></textarea>
+    <select id="status-select">
+      <option value="online">🟢 Online</option>
+      <option value="idle">🌙 Idle</option>
+      <option value="dnd">⛔ DND</option>
+      <option value="invisible">⚫ Invisible</option>
+    </select>
+    <input type="file" id="avatar-input" accept="image/*">
+    <button id="update-profile-btn">تحديث الحساب</button>
+  </div>
 </div>
 
 <script>
