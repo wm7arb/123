@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// الاتصال بقاعدة البيانات MongoDB
+// الاتصال بقاعدة البيانات MongoDB (استخدم الرابط الذي قدمته سابقًا)
 mongoose.connect('mongodb+srv://Nnsnsjj:whney@cluster0.iodkr.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.log('Error connecting to MongoDB:', err));
@@ -27,7 +27,7 @@ app.use(express.static('public'));
 // عند الاتصال بالخادم عبر Socket.io
 io.on('connection', (socket) => {
   console.log('A user connected');
-
+  
   // إرسال جميع الرسائل للمستخدمين المتصلين عند الاتصال
   Message.find().then(messages => {
     socket.emit('previous messages', messages);  // إرسال الرسائل السابقة للمستخدم الجديد
