@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دردشة محمد المعاشي - سناب شات</title>
+    <title>دردشة محمد المعاشي</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,7 +39,6 @@
         }
         .input-container {
             display: flex;
-            align-items: center;
             gap: 10px;
         }
         .input-container input {
@@ -88,10 +87,6 @@
         .message .text {
             max-width: 100%;
         }
-        .message img {
-            max-width: 150px;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -100,9 +95,7 @@
         <div class="header">
             <h2>دردشة محمد المعاشي</h2>
         </div>
-        <div class="chat-box" id="chat-box">
-            <!-- الرسائل ستظهر هنا -->
-        </div>
+        <div class="chat-box" id="chat-box"></div>
         <div class="input-container">
             <input type="text" id="user-input" placeholder="اكتب هنا..." />
             <button onclick="sendMessage()">إرسال</button>
@@ -111,8 +104,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
     <script>
-        // الاتصال بخادم WebSocket باستخدام Socket.io
-        const socket = io('http://localhost:3000');  // استبدل هذا بعنوان الخادم الخاص بك
+        const socket = io();
 
         // عند تلقي رسالة من الخادم
         socket.on('chat message', function(msg){
@@ -120,11 +112,11 @@
 
             // عرض الرسالة الواردة في مربع الدردشة
             const messageElement = document.createElement("div");
-            messageElement.classList.add("message", msg.isUser ? "user" : "other");
+            messageElement.classList.add("message", msg.user === "You" ? "user" : "other");
 
             const avatar = document.createElement("img");
             avatar.classList.add("avatar");
-            avatar.src = msg.isUser ? "https://via.placeholder.com/40/0084ff/fff?text=U" : "https://via.placeholder.com/40/ff0000/fff?text=O";  // صورة المستخدم
+            avatar.src = msg.user === "You" ? "https://via.placeholder.com/40/0084ff/fff?text=U" : "https://via.placeholder.com/40/ff0000/fff?text=O"; // صورة المستخدم
 
             const text = document.createElement("div");
             text.classList.add("text");
@@ -142,14 +134,14 @@
         // إرسال الرسالة إلى الخادم
         function sendMessage() {
             const userInput = document.getElementById("user-input").value;
-            if (userInput.trim() !== "") {
-                const chatBox = document.getElementById("chat-box");
+            const userMessage = {
+                text: userInput,
+                user: "You"
+            };
 
-                // عرض رسالة المستخدم في الدردشة
-                const userMessage = {
-                    text: userInput,
-                    isUser: true
-                };
+            if (userInput.trim() !== "") {
+                // عرض الرسالة في الدردشة
+                const chatBox = document.getElementById("chat-box");
 
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message", "user");
