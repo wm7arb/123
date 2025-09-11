@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محادثة مع الذكاء الاصطناعي</title>
+    <title>موقع محمد المعاشي</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,55 +59,19 @@
             color: #e0e0e0;
         }
         .user {
-            background-color: #333; /* رسالة المستخدم بتنسيق داكن */
+            background-color: #333;
             text-align: left;
         }
-        .ai {
-            background-color: #444; /* رسالة الذكاء الاصطناعي بتنسيق داكن */
-            text-align: right;
-        }
-        .right-click-menu {
-            position: absolute;
-            background-color: #1e1e1e; /* خلفية داكنة للقائمة */
-            border: 1px solid #333;
-            display: none;
-            z-index: 1000;
-            border-radius: 4px;
-        }
-        .right-click-menu button {
-            padding: 10px;
-            width: 180px;
-            background-color: #2b2b2b;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            color: #e0e0e0;
-        }
-        .right-click-menu button:hover {
+        .other {
             background-color: #444;
-        }
-        .add-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            padding: 20px;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        .add-button:hover {
-            background-color: #45a049;
+            text-align: right;
         }
     </style>
 </head>
 <body>
 
     <div class="chat-container">
-        <h2 style="color: #e0e0e0; text-align: center;">محادثة مع الذكاء الاصطناعي</h2>
+        <h2 style="color: #e0e0e0; text-align: center;">دردشة جماعية</h2>
         <div class="chat-box" id="chat-box"></div>
         <div class="input-container">
             <input type="text" id="user-input" placeholder="اكتب هنا..." />
@@ -115,161 +79,50 @@
         </div>
     </div>
 
-    <div class="right-click-menu" id="right-click-menu">
-        <button onclick="uploadImage()">إضافة صورة</button>
-        <button onclick="uploadFile()">إضافة ملف</button>
-        <button onclick="capturePhoto()">التقاط صورة</button>
-    </div>
-
-    <input type="file" id="image-input" style="display: none" accept="image/*" onchange="showImage(event)">
-    <input type="file" id="file-input" style="display: none" onchange="showFile(event)">
-
-    <button class="add-button" onclick="toggleRightClickMenu()">+</button>
-
     <script>
-        const apiKey = '68c31ab4163881909f90bde18cbeb3040c2c9935d512f0be'; // API key for OpenAI
-        const webhookURL = 'https://discord.com/api/webhooks/1415772880339210321/chrvWRgBGd8qy7JBeZ2wiUIeNerw6VxYhQws8A4xTtaCsVKu279W_N6ABJCpG5GRhhgg'; // Discord Webhook URL
+        // قم بتحديد الـ WebSocket URL الذي سيستقبل الرسائل من المستخدمين الآخرين
+        const socket = new WebSocket('wss://your-websocket-server-url');
 
-        async function sendMessage() {
+        // عند الاتصال بالخادم
+        socket.onopen = function() {
+            console.log("تم الاتصال بالخادم");
+        };
+
+        // عند تلقي رسالة من الخادم
+        socket.onmessage = function(event) {
+            const chatBox = document.getElementById("chat-box");
+            const message = event.data;
+
+            // عرض الرسالة الواردة في مربع الدردشة
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message", "other");
+            messageElement.innerText = message;
+            chatBox.appendChild(messageElement);
+
+            // التمرير إلى أسفل لعرض الرسائل الجديدة
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        // إرسال الرسالة إلى الخادم
+        function sendMessage() {
             const userInput = document.getElementById("user-input").value;
             if (userInput.trim() !== "") {
                 const chatBox = document.getElementById("chat-box");
 
-                // Show user message
+                // عرض رسالة المستخدم في الدردشة
                 const userMessage = document.createElement("div");
                 userMessage.classList.add("message", "user");
                 userMessage.innerText = userInput;
                 chatBox.appendChild(userMessage);
 
-                // Clear input field
+                // إرسال الرسالة إلى الخادم عبر WebSocket
+                socket.send(userInput);
+
+                // مسح حقل الإدخال بعد إرسال الرسالة
                 document.getElementById("user-input").value = "";
 
-                // Send user input to OpenAI API and get response
-                const response = await getAIResponse(userInput);
-
-                // Show AI response
-                const aiMessage = document.createElement("div");
-                aiMessage.classList.add("message", "ai");
-                aiMessage.innerText = response;
-                chatBox.appendChild(aiMessage);
-
-                // Send both user and AI messages to Discord Webhook
-                sendToDiscord(userInput, response);
-
-                // Scroll to the bottom
+                // التمرير إلى أسفل لعرض الرسائل الجديدة
                 chatBox.scrollTop = chatBox.scrollHeight;
-            }
-        }
-
-        // Function to interact with OpenAI API
-        async function getAIResponse(userInput) {
-            const response = await fetch('https://api.openai.com/v1/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'text-davinci-003',
-                    prompt: userInput,
-                    max_tokens: 150
-                })
-            });
-
-            const data = await response.json();
-            return data.choices[0].text.trim(); // Return AI response
-        }
-
-        // Function to send messages to Discord Webhook
-        async function sendToDiscord(userMessage, aiResponse) {
-            const payload = {
-                content: `**رسالة المستخدم:** ${userMessage}\n**رد الذكاء الاصطناعي:** ${aiResponse}`
-            };
-
-            await fetch(webhookURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        }
-
-        // Toggle the right-click menu visibility
-        function toggleRightClickMenu() {
-            const menu = document.getElementById("right-click-menu");
-            menu.style.display = (menu.style.display === "block") ? "none" : "block";
-        }
-
-        // Right-click menu functionality
-        document.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-            const menu = document.getElementById("right-click-menu");
-            menu.style.top = `${e.pageY}px`;
-            menu.style.left = `${e.pageX}px`;
-            menu.style.display = "block";
-        });
-
-        // Hide the right-click menu when clicking elsewhere
-        document.addEventListener("click", function () {
-            const menu = document.getElementById("right-click-menu");
-            menu.style.display = "none";
-        });
-
-        // Functions for image and file upload
-        function uploadImage() {
-            document.getElementById("image-input").click();
-        }
-
-        function uploadFile() {
-            document.getElementById("file-input").click();
-        }
-
-        function capturePhoto() {
-            const video = document.createElement("video");
-            video.width = 640;
-            video.height = 480;
-
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                    video.play();
-                    setTimeout(function () {
-                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        const imageUrl = canvas.toDataURL("image/png");
-                        const imgMessage = document.createElement("div");
-                        imgMessage.classList.add("message", "ai");
-                        imgMessage.innerHTML = `<img src="${imageUrl}" alt="Captured Image" style="max-width: 100%;">`;
-                        document.getElementById("chat-box").appendChild(imgMessage);
-                        stream.getTracks().forEach(track => track.stop());
-                    }, 2000);
-                });
-        }
-
-        // Display the selected image
-        function showImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const imgMessage = document.createElement("div");
-                    imgMessage.classList.add("message", "ai");
-                    imgMessage.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" style="max-width: 100%;">`;
-                    document.getElementById("chat-box").appendChild(imgMessage);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // Handle file upload
-        function showFile(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const fileMessage = document.createElement("div");
-                fileMessage.classList.add("message", "ai");
-                fileMessage.innerHTML = `<a href="${URL.createObjectURL(file)}" download>تحميل الملف: ${file.name}</a>`;
-                document.getElementById("chat-box").appendChild(fileMessage);
             }
         }
     </script>
