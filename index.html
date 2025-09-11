@@ -7,8 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
+            background-color: #121212; /* خلفية داكنة */
+            color: #e0e0e0; /* لون النص الفاتح */
             margin: 0;
             padding: 0;
         }
@@ -16,16 +16,16 @@
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #1e1e1e; /* خلفية داكنة لحاوية المحادثة */
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         .chat-box {
             height: 400px;
             overflow-y: auto;
-            border: 1px solid #ddd;
+            border: 1px solid #333; /* حدود داكنة للصندوق */
             padding: 10px;
-            background-color: #fafafa;
+            background-color: #1f1f1f; /* خلفية داكنة للصندوق */
             border-radius: 4px;
         }
         .input-container {
@@ -35,8 +35,10 @@
         .input-container input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #555; /* حدود داكنة لحقل الإدخال */
             border-radius: 4px;
+            background-color: #333; /* خلفية داكنة لحقل الإدخال */
+            color: #e0e0e0; /* لون النص الفاتح */
         }
         .input-container button {
             padding: 10px 20px;
@@ -53,19 +55,21 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 4px;
+            background-color: #333;
+            color: #e0e0e0;
         }
         .user {
-            background-color: #e0f7fa;
+            background-color: #333; /* رسالة المستخدم بتنسيق داكن */
             text-align: left;
         }
         .ai {
-            background-color: #f1f8e9;
+            background-color: #444; /* رسالة الذكاء الاصطناعي بتنسيق داكن */
             text-align: right;
         }
         .right-click-menu {
             position: absolute;
-            background-color: white;
-            border: 1px solid #ddd;
+            background-color: #1e1e1e; /* خلفية داكنة للقائمة */
+            border: 1px solid #333;
             display: none;
             z-index: 1000;
             border-radius: 4px;
@@ -73,23 +77,40 @@
         .right-click-menu button {
             padding: 10px;
             width: 180px;
-            background-color: #f0f0f0;
+            background-color: #2b2b2b;
             border: none;
             text-align: left;
             cursor: pointer;
+            color: #e0e0e0;
         }
         .right-click-menu button:hover {
-            background-color: #ddd;
+            background-color: #444;
+        }
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 20px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .add-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
     <div class="chat-container">
-        <h2>محادثة مع الذكاء الاصطناعي</h2>
+        <h2 style="color: #e0e0e0; text-align: center;">محادثة مع الذكاء الاصطناعي</h2>
         <div class="chat-box" id="chat-box"></div>
         <div class="input-container">
-            <input type="text" id="user-input" placeholder="اكتب هنا...">
+            <input type="text" id="user-input" placeholder="اكتب هنا..." />
             <button onclick="sendMessage()">إرسال</button>
         </div>
     </div>
@@ -103,8 +124,13 @@
     <input type="file" id="image-input" style="display: none" accept="image/*" onchange="showImage(event)">
     <input type="file" id="file-input" style="display: none" onchange="showFile(event)">
 
+    <button class="add-button" onclick="toggleRightClickMenu()">+</button>
+
     <script>
-        function sendMessage() {
+        const apiKey = '68c31ab4163881909f90bde18cbeb3040c2c9935d512f0be'; // API key for OpenAI
+        const webhookURL = 'https://discord.com/api/webhooks/1415772880339210321/chrvWRgBGd8qy7JBeZ2wiUIeNerw6VxYhQws8A4xTtaCsVKu279W_N6ABJCpG5GRhhgg'; // Discord Webhook URL
+
+        async function sendMessage() {
             const userInput = document.getElementById("user-input").value;
             if (userInput.trim() !== "") {
                 const chatBox = document.getElementById("chat-box");
@@ -118,17 +144,59 @@
                 // Clear input field
                 document.getElementById("user-input").value = "";
 
-                // Simulate AI response after 1 second
-                setTimeout(() => {
-                    const aiMessage = document.createElement("div");
-                    aiMessage.classList.add("message", "ai");
-                    aiMessage.innerText = "أنا الذكاء الاصطناعي، كيف يمكنني مساعدتك؟";
-                    chatBox.appendChild(aiMessage);
+                // Send user input to OpenAI API and get response
+                const response = await getAIResponse(userInput);
 
-                    // Scroll to the bottom
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }, 1000);
+                // Show AI response
+                const aiMessage = document.createElement("div");
+                aiMessage.classList.add("message", "ai");
+                aiMessage.innerText = response;
+                chatBox.appendChild(aiMessage);
+
+                // Send both user and AI messages to Discord Webhook
+                sendToDiscord(userInput, response);
+
+                // Scroll to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
+        }
+
+        // Function to interact with OpenAI API
+        async function getAIResponse(userInput) {
+            const response = await fetch('https://api.openai.com/v1/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'text-davinci-003',
+                    prompt: userInput,
+                    max_tokens: 150
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].text.trim(); // Return AI response
+        }
+
+        // Function to send messages to Discord Webhook
+        async function sendToDiscord(userMessage, aiResponse) {
+            const payload = {
+                content: `**رسالة المستخدم:** ${userMessage}\n**رد الذكاء الاصطناعي:** ${aiResponse}`
+            };
+
+            await fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        // Toggle the right-click menu visibility
+        function toggleRightClickMenu() {
+            const menu = document.getElementById("right-click-menu");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
         }
 
         // Right-click menu functionality
