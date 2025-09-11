@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع محمد المعاشي</title>
+    <title>محمد المعاشي - دردشة جماعية</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212; /* خلفية داكنة */
-            color: #e0e0e0; /* لون النص الفاتح */
+            background-color: #121212;
+            color: #e0e0e0;
             margin: 0;
             padding: 0;
         }
@@ -16,16 +16,16 @@
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #1e1e1e; /* خلفية داكنة لحاوية المحادثة */
+            background-color: #1e1e1e;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         .chat-box {
             height: 400px;
             overflow-y: auto;
-            border: 1px solid #333; /* حدود داكنة للصندوق */
+            border: 1px solid #333;
             padding: 10px;
-            background-color: #1f1f1f; /* خلفية داكنة للصندوق */
+            background-color: #1f1f1f;
             border-radius: 4px;
         }
         .input-container {
@@ -35,10 +35,10 @@
         .input-container input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #555; /* حدود داكنة لحقل الإدخال */
+            border: 1px solid #555;
             border-radius: 4px;
-            background-color: #333; /* خلفية داكنة لحقل الإدخال */
-            color: #e0e0e0; /* لون النص الفاتح */
+            background-color: #333;
+            color: #e0e0e0;
         }
         .input-container button {
             padding: 10px 20px;
@@ -71,7 +71,7 @@
 <body>
 
     <div class="chat-container">
-        <h2 style="color: #e0e0e0; text-align: center;">دردشة جماعية</h2>
+        <h2 style="color: #e0e0e0; text-align: center;">دردشة محمد المعاشي</h2>
         <div class="chat-box" id="chat-box"></div>
         <div class="input-container">
             <input type="text" id="user-input" placeholder="اكتب هنا..." />
@@ -81,7 +81,7 @@
 
     <script>
         // قم بتحديد الـ WebSocket URL الذي سيستقبل الرسائل من المستخدمين الآخرين
-        const socket = new WebSocket('wss://your-websocket-server-url');
+        const socket = new WebSocket('wss://your-websocket-server-url'); // استبدل هذا بـ WebSocket URL الخاص بك
 
         // عند الاتصال بالخادم
         socket.onopen = function() {
