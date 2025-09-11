@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// الاتصال بقاعدة البيانات MongoDB (استخدم الرابط الذي قدمته سابقًا)
+// الاتصال بقاعدة بيانات MongoDB
 mongoose.connect('mongodb+srv://Nnsnsjj:whney@cluster0.iodkr.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.log('Error connecting to MongoDB:', err));
