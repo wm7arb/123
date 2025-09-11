@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محمد المعاشي - دردشة جماعية</title>
+    <title>دردشة محمد المعاشي</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,29 +79,24 @@
         </div>
     </div>
 
+    <!-- إضافة مكتبة Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-        // قم بتحديد الـ WebSocket URL الذي سيستقبل الرسائل من المستخدمين الآخرين
-        const socket = new WebSocket('wss://your-websocket-server-url'); // استبدل هذا بـ WebSocket URL الخاص بك
-
-        // عند الاتصال بالخادم
-        socket.onopen = function() {
-            console.log("تم الاتصال بالخادم");
-        };
+        const socket = io();
 
         // عند تلقي رسالة من الخادم
-        socket.onmessage = function(event) {
+        socket.on('chat message', function(msg){
             const chatBox = document.getElementById("chat-box");
-            const message = event.data;
 
             // عرض الرسالة الواردة في مربع الدردشة
             const messageElement = document.createElement("div");
             messageElement.classList.add("message", "other");
-            messageElement.innerText = message;
+            messageElement.innerText = msg;
             chatBox.appendChild(messageElement);
 
             // التمرير إلى أسفل لعرض الرسائل الجديدة
             chatBox.scrollTop = chatBox.scrollHeight;
-        };
+        });
 
         // إرسال الرسالة إلى الخادم
         function sendMessage() {
@@ -115,8 +110,8 @@
                 userMessage.innerText = userInput;
                 chatBox.appendChild(userMessage);
 
-                // إرسال الرسالة إلى الخادم عبر WebSocket
-                socket.send(userInput);
+                // إرسال الرسالة إلى الخادم عبر Socket.io
+                socket.emit('chat message', userInput);
 
                 // مسح حقل الإدخال بعد إرسال الرسالة
                 document.getElementById("user-input").value = "";
