@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دردشة محمد المعاشي</title>
+    <title>دردشة محمد المعاشي - سناب شات</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
         }
@@ -16,73 +15,104 @@
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #1e1e1e;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            font-size: 24px;
+            color: #333;
         }
         .chat-box {
             height: 400px;
             overflow-y: auto;
-            border: 1px solid #333;
             padding: 10px;
-            background-color: #1f1f1f;
-            border-radius: 4px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            position: relative;
         }
         .input-container {
             display: flex;
-            margin-top: 10px;
+            align-items: center;
+            gap: 10px;
         }
         .input-container input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #555;
-            border-radius: 4px;
-            background-color: #333;
-            color: #e0e0e0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: 16px;
         }
         .input-container button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
         }
         .input-container button:hover {
             background-color: #45a049;
         }
         .message {
-            padding: 10px;
+            display: flex;
+            align-items: flex-start;
             margin: 10px 0;
-            border-radius: 4px;
-            background-color: #333;
-            color: #e0e0e0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
         }
-        .user {
-            background-color: #333;
-            text-align: left;
+        .message.user {
+            background-color: #0084ff;
+            color: white;
+            margin-left: auto;
+            border-radius: 15px 15px 0 15px;
         }
-        .other {
-            background-color: #444;
-            text-align: right;
+        .message.other {
+            background-color: #f1f1f1;
+            color: #333;
+            border-radius: 15px 15px 15px 0;
+        }
+        .message .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .message .text {
+            max-width: 100%;
+        }
+        .message img {
+            max-width: 150px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
 
     <div class="chat-container">
-        <h2 style="color: #e0e0e0; text-align: center;">دردشة محمد المعاشي</h2>
-        <div class="chat-box" id="chat-box"></div>
+        <div class="header">
+            <h2>دردشة محمد المعاشي</h2>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <!-- الرسائل ستظهر هنا -->
+        </div>
         <div class="input-container">
             <input type="text" id="user-input" placeholder="اكتب هنا..." />
             <button onclick="sendMessage()">إرسال</button>
         </div>
     </div>
 
-    <!-- إضافة مكتبة Socket.io -->
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script>
     <script>
-        const socket = io();
+        // الاتصال بخادم WebSocket باستخدام Socket.io
+        const socket = io('http://localhost:3000');  // استبدل هذا بعنوان الخادم الخاص بك
 
         // عند تلقي رسالة من الخادم
         socket.on('chat message', function(msg){
@@ -90,8 +120,19 @@
 
             // عرض الرسالة الواردة في مربع الدردشة
             const messageElement = document.createElement("div");
-            messageElement.classList.add("message", "other");
-            messageElement.innerText = msg;
+            messageElement.classList.add("message", msg.isUser ? "user" : "other");
+
+            const avatar = document.createElement("img");
+            avatar.classList.add("avatar");
+            avatar.src = msg.isUser ? "https://via.placeholder.com/40/0084ff/fff?text=U" : "https://via.placeholder.com/40/ff0000/fff?text=O";  // صورة المستخدم
+
+            const text = document.createElement("div");
+            text.classList.add("text");
+            text.innerText = msg.text;
+
+            messageElement.appendChild(avatar);
+            messageElement.appendChild(text);
+
             chatBox.appendChild(messageElement);
 
             // التمرير إلى أسفل لعرض الرسائل الجديدة
@@ -105,13 +146,29 @@
                 const chatBox = document.getElementById("chat-box");
 
                 // عرض رسالة المستخدم في الدردشة
-                const userMessage = document.createElement("div");
-                userMessage.classList.add("message", "user");
-                userMessage.innerText = userInput;
-                chatBox.appendChild(userMessage);
+                const userMessage = {
+                    text: userInput,
+                    isUser: true
+                };
+
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message", "user");
+
+                const avatar = document.createElement("img");
+                avatar.classList.add("avatar");
+                avatar.src = "https://via.placeholder.com/40/0084ff/fff?text=U";
+
+                const text = document.createElement("div");
+                text.classList.add("text");
+                text.innerText = userInput;
+
+                messageElement.appendChild(avatar);
+                messageElement.appendChild(text);
+
+                chatBox.appendChild(messageElement);
 
                 // إرسال الرسالة إلى الخادم عبر Socket.io
-                socket.emit('chat message', userInput);
+                socket.emit('chat message', userMessage);
 
                 // مسح حقل الإدخال بعد إرسال الرسالة
                 document.getElementById("user-input").value = "";
