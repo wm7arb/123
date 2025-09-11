@@ -3,45 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقع تشفير بكلمة مرور</title>
-    <script>
-        function encryptCode() {
-            const password = document.getElementById('password').value;
-            const correctPassword = "12345"; // يمكن تغيير كلمة المرور هنا
+    <title>محادثة مع الذكاء الاصطناعي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fafafa;
+            border-radius: 4px;
+        }
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .user {
+            background-color: #e0f7fa;
+            text-align: left;
+        }
+        .ai {
+            background-color: #f1f8e9;
+            text-align: right;
+        }
+        .right-click-menu {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            display: none;
+            z-index: 1000;
+            border-radius: 4px;
+        }
+        .right-click-menu button {
+            padding: 10px;
+            width: 180px;
+            background-color: #f0f0f0;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+        }
+        .right-click-menu button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
 
-            if (password === correctPassword) {
-                // هنا يتم إظهار الكود المشفر
-                const codeToEncrypt = document.getElementById('code').value;
-                const encryptedCode = btoa(codeToEncrypt); // استخدام base64 لتشفير النص
-                document.getElementById('encryptedContent').innerHTML = `الكود المشفر: ${encryptedCode}`;
-                document.getElementById('error').style.display = 'none';
-                document.getElementById('encryptedContent').style.display = 'block';
-            } else {
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('encryptedContent').style.display = 'none';
+    <div class="chat-container">
+        <h2>محادثة مع الذكاء الاصطناعي</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="اكتب هنا...">
+            <button onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <div class="right-click-menu" id="right-click-menu">
+        <button onclick="uploadImage()">إضافة صورة</button>
+        <button onclick="uploadFile()">إضافة ملف</button>
+        <button onclick="capturePhoto()">التقاط صورة</button>
+    </div>
+
+    <input type="file" id="image-input" style="display: none" accept="image/*" onchange="showImage(event)">
+    <input type="file" id="file-input" style="display: none" onchange="showFile(event)">
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (userInput.trim() !== "") {
+                const chatBox = document.getElementById("chat-box");
+
+                // Show user message
+                const userMessage = document.createElement("div");
+                userMessage.classList.add("message", "user");
+                userMessage.innerText = userInput;
+                chatBox.appendChild(userMessage);
+
+                // Clear input field
+                document.getElementById("user-input").value = "";
+
+                // Simulate AI response after 1 second
+                setTimeout(() => {
+                    const aiMessage = document.createElement("div");
+                    aiMessage.classList.add("message", "ai");
+                    aiMessage.innerText = "أنا الذكاء الاصطناعي، كيف يمكنني مساعدتك؟";
+                    chatBox.appendChild(aiMessage);
+
+                    // Scroll to the bottom
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // Right-click menu functionality
+        document.addEventListener("contextmenu", function (e) {
+            e.preventDefault();
+            const menu = document.getElementById("right-click-menu");
+            menu.style.top = `${e.pageY}px`;
+            menu.style.left = `${e.pageX}px`;
+            menu.style.display = "block";
+        });
+
+        // Hide the right-click menu when clicking elsewhere
+        document.addEventListener("click", function () {
+            const menu = document.getElementById("right-click-menu");
+            menu.style.display = "none";
+        });
+
+        // Functions for image and file upload
+        function uploadImage() {
+            document.getElementById("image-input").click();
+        }
+
+        function uploadFile() {
+            document.getElementById("file-input").click();
+        }
+
+        function capturePhoto() {
+            const video = document.createElement("video");
+            video.width = 640;
+            video.height = 480;
+
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                    setTimeout(function () {
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const imageUrl = canvas.toDataURL("image/png");
+                        const imgMessage = document.createElement("div");
+                        imgMessage.classList.add("message", "ai");
+                        imgMessage.innerHTML = `<img src="${imageUrl}" alt="Captured Image" style="max-width: 100%;">`;
+                        document.getElementById("chat-box").appendChild(imgMessage);
+                        stream.getTracks().forEach(track => track.stop());
+                    }, 2000);
+                });
+        }
+
+        // Display the selected image
+        function showImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgMessage = document.createElement("div");
+                    imgMessage.classList.add("message", "ai");
+                    imgMessage.innerHTML = `<img src="${e.target.result}" alt="Uploaded Image" style="max-width: 100%;">`;
+                    document.getElementById("chat-box").appendChild(imgMessage);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle file upload
+        function showFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileMessage = document.createElement("div");
+                fileMessage.classList.add("message", "ai");
+                fileMessage.innerHTML = `<a href="${URL.createObjectURL(file)}" download>تحميل الملف: ${file.name}</a>`;
+                document.getElementById("chat-box").appendChild(fileMessage);
             }
         }
     </script>
-</head>
-<body>
-    <h2>أدخل كلمة المرور لتشفير الكود</h2>
-    
-    <!-- حقل كلمة المرور -->
-    <input type="password" id="password" placeholder="أدخل كلمة المرور" />
-    <button onclick="encryptCode()">تشفير الكود</button>
 
-    <!-- رسالة خطأ في حال كانت كلمة المرور خاطئة -->
-    <div id="error" style="color: red; display: none;">
-        <p>كلمة المرور غير صحيحة.</p>
-    </div>
-
-    <!-- حقل إدخال الكود للتشفير -->
-    <textarea id="code" placeholder="أدخل الكود هنا"></textarea>
-
-    <!-- عرض الكود المشفر بعد إدخال كلمة المرور الصحيحة -->
-    <div id="encryptedContent" style="display: none;">
-        <h3>الكود المشفر:</h3>
-        <p></p>
-    </div>
 </body>
 </html>
