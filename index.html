@@ -143,7 +143,7 @@
 
     <div class="button-container">
         <button class="button" onclick="showTab('gang')">تقديم عصابات</button>
-        <button class="button" onclick="showTab('police')">تقديم شرطة</button>
+        <button class="button" onclick="showTab('police')">تقديم الامن العام</button>
         <button class="button" onclick="showTab('special-forces')">تقديم قوات خاصة</button>
     </div>
 
@@ -358,17 +358,16 @@
 
         document.getElementById('gang-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            sendToWebhook('gang-form', 'https://discord.com/api/webhooks/1421267554558541936/Q5iBGjGrQADPyLpJhptqHX_hVE_CYCNwimvGuJWKYzNWh5XcNuN_bu6MrM7rsZMwOajj');
+            sendToWebhook('gang-form', 'https://discord.com/api/webhooks/1430659853671731410/JZXvhhUJFRU8ZDtjh9bu4QH_caBd4ysTHRKZ60XLpPEzwUdSP6dwBKIdGHnh7wU5Ebr1');
         });
 
         document.getElementById('police-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            sendToWebhook('police-form', 'https://discord.com/api/webhooks/1421267470861471766/MMdTyoS7TL6YnwzdVu2TZKLIgyWbW-tVrgi1y49hyVTg-uS8D86M3phWtz_i6W8Qaxgb');
-        });
+            sendToWebhook('police-form', 'https://discord.com/api/webhooks/1430659853671731410/JZXvhhUJFRU8ZDtjh9bu4QH_caBd4ysTHRKZ60XLpPEzwUdSP6dwBKIdGHnh7wU5Ebr1');
 
         document.getElementById('special-forces-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            sendToWebhook('special-forces-form', 'https://discord.com/api/webhooks/1421267395728773150/ZAM2YGB7fFKf_U597257UQPyYOpCbu8fRmav26DtoxSJXi-oNiDrt-tjmwD76_lJvCbo');
+            sendToWebhook('special-forces-form', 'https://discord.com/api/webhooks/1430659853671731410/JZXvhhUJFRU8ZDtjh9bu4QH_caBd4ysTHRKZ60XLpPEzwUdSP6dwBKIdGHnh7wU5Ebr1');
         });
     </script>
 
