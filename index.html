@@ -3,19 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج التقديم</title>
+    <title>نموذج تقديم الامن العام</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             direction: rtl;
             text-align: right;
             padding: 20px;
+            background: linear-gradient(135deg, #f1f1f1, #dfe9f3);
+            margin: 0;
+            height: 100vh;
+        }
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 30px auto;
         }
         input, button, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+            padding: 12px;
+            margin: 8px 0;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
             background-color: #4CAF50;
@@ -29,10 +46,16 @@
         label {
             display: block;
             margin-top: 10px;
+            font-weight: bold;
         }
         p {
             color: green;
             font-size: 18px;
+            text-align: center;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -40,26 +63,33 @@
 
     <h2>نموذج التقديم</h2>
 
-    <form id="form">
-        <label for="name">الإسم الثلاثي:</label>
-        <input type="text" id="name" required>
+    <div class="container">
+        <form id="form">
+            <!-- السؤال الجديد -->
+            <label for="username">يوزر ديسكورد:</label>
+            <input type="text" id="username" required>
 
-        <label for="age">العمر الحقيقي:</label>
-        <input type="number" id="age" required>
+            <label for="name">الإسم الثلاثي:</label>
+            <input type="text" id="name" required>
 
-        <label for="sector">القطاع المتقدم عليه:</label>
-        <input type="text" id="sector" required>
+            <label for="age">العمر الحقيقي:</label>
+            <input type="number" id="age" required>
 
-        <label for="reason">سبب التقديم:</label>
-        <textarea id="reason" required></textarea>
+            <label for="sector">القطاع المتقدم عليه:</label>
+            <input type="text" id="sector" required>
 
-        <label for="commitment">هل تتعهد بالالتزام بجميع القوانين والأنظمة العسكرية؟</label>
-        <input type="checkbox" id="commitment" required>
+            <label for="reason">سبب التقديم:</label>
+            <textarea id="reason" required></textarea>
 
-        <button type="submit" id="submitBtn">إرسال التقديم</button>
-    </form>
+            <label for="commitment">هل تتعهد بالالتزام بجميع القوانين والأنظمة العسكرية؟</label>
+            <input type="checkbox" id="commitment" required>
 
-    <p id="responseMessage"></p>
+            <button type="submit" id="submitBtn">إرسال التقديم</button>
+        </form>
+
+        <p id="responseMessage"></p>
+        <p class="error" id="errorMessage"></p>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -67,12 +97,42 @@
 
         $("#form").submit(function(event) {
             event.preventDefault();
+            
+            // التحقق من أن جميع الحقول تم تعبئتها
+            let errorMessage = '';
+            if ($("#username").val() === '') {
+                errorMessage += 'يرجى إدخال يوزر ديسكورد.\n';
+            }
+            if ($("#name").val() === '') {
+                errorMessage += 'يرجى إدخال الإسم الثلاثي.\n';
+            }
+            if ($("#age").val() === '') {
+                errorMessage += 'يرجى إدخال العمر الحقيقي.\n';
+            }
+            if ($("#sector").val() === '') {
+                errorMessage += 'يرجى إدخال القطاع المتقدم عليه.\n';
+            }
+            if ($("#reason").val() === '') {
+                errorMessage += 'يرجى إدخال سبب التقديم.\n';
+            }
+            if (!$("#commitment").prop("checked")) {
+                errorMessage += 'يرجى التأكد من تعهدك بالالتزام بالقوانين.\n';
+            }
+
+            // إذا كان هناك خطأ في الحقول
+            if (errorMessage !== '') {
+                $("#errorMessage").text(errorMessage.replace(/\n/g, '<br>'));
+                return;
+            } else {
+                $("#errorMessage").text('');
+            }
 
             if (cooldown) {
                 alert("تم الإرسال بالفعل! يرجى الانتظار 10 ثواني.");
                 return;
             }
 
+            let username = $("#username").val();
             let name = $("#name").val();
             let age = $("#age").val();
             let sector = $("#sector").val();
@@ -81,6 +141,7 @@
 
             let data = {
                 content: `
+                    **يوزر ديسكورد:** ${username}
                     **الإسم الثلاثي:** ${name}
                     **العمر الحقيقي:** ${age}
                     **القطاع المتقدم عليه:** ${sector}
