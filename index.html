@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج تقديم الامن العام</title>
+    <title>نموذج التقديم</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -147,7 +147,26 @@
                     **القطاع المتقدم عليه:** ${sector}
                     **سبب التقديم:** ${reason}
                     **هل تتعهد بالالتزام؟** ${commitment}
-                `
+                `,
+                components: [
+                    {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                style: 1,
+                                label: "قبول",
+                                custom_id: "accept",
+                            },
+                            {
+                                type: 2,
+                                style: 4,
+                                label: "رفض",
+                                custom_id: "reject",
+                            }
+                        ]
+                    }
+                ]
             };
 
             // إرسال البيانات إلى Webhook
