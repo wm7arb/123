@@ -64,7 +64,7 @@
     <h2>نموذج التقديم</h2>
 
     <div class="container">
-        <form id="form">
+        <form id="form" enctype="multipart/form-data">
             <!-- الأسئلة الجديدة -->
             <label for="username">يوزر ديسكورد:</label>
             <input type="text" id="username" required>
@@ -112,6 +112,10 @@
         $("#form").submit(function(event) {
             event.preventDefault();
             
+            // حذف الرسالة القديمة إذا كانت موجودة
+            $("#responseMessage").text('');
+            $("#errorMessage").text('');
+
             // التحقق من أن جميع الحقول تم تعبئتها
             let errorMessage = '';
             if ($("#username").val() === '') {
@@ -164,46 +168,29 @@
             let realName = $("#realName").val();
             let location = $("#location").val();
             let status = $("#status").val();
+            let imageFile = $("#imageUpload")[0].files[0];  // الحصول على الصورة التي تم تحميلها
 
-            let data = {
-                content: `
-                    **يوزر ديسكورد:** ${username}
-                    **الإسم الثلاثي:** ${name}
-                    **العمر الحقيقي:** ${age}
-                    **القطاع المتقدم عليه:** ${sector}
-                    **سبب التقديم:** ${reason}
-                    **هل تتعهد بالالتزام؟** ${commitment}
-                    **اسمك:** ${realName}
-                    **موقع برشوت كم:** ${location}
-                    **حالتك:** ${status}
-                `,
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                style: 1,
-                                label: "قبول",
-                                custom_id: "accept",
-                            },
-                            {
-                                type: 2,
-                                style: 4,
-                                label: "رفض",
-                                custom_id: "reject",
-                            }
-                        ]
-                    }
-                ]
-            };
+            let formData = new FormData();
+            formData.append('username', username);
+            formData.append('name', name);
+            formData.append('age', age);
+            formData.append('sector', sector);
+            formData.append('reason', reason);
+            formData.append('commitment', commitment);
+            formData.append('realName', realName);
+            formData.append('location', location);
+            formData.append('status', status);
+            if (imageFile) {
+                formData.append('image', imageFile);  // إضافة الصورة إلى البيانات
+            }
 
-            // إرسال البيانات إلى Webhook
+            // إرسال البيانات إلى Webhook باستخدام FormData
             $.ajax({
                 url: "https://discord.com/api/webhooks/1430659853671731410/JZXvhhUJFRU8ZDtjh9bu4QH_caBd4ysTHRKZ60XLpPEzwUdSP6dwBKIdGHnh7wU5Ebr1",
                 type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(data),
+                processData: false,  // لا نقوم بمعالجة البيانات
+                contentType: false,  // لا نقوم بتحديد نوع المحتوى (سيتم تحديده تلقائيًا)
+                data: formData,
                 success: function(response) {
                     $("#responseMessage").text("تم إرسال التقديم بنجاح!");
                     $("#submitBtn").prop("disabled", true);  // تعطيل الزر
