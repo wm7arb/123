@@ -65,7 +65,7 @@
 
     <div class="container">
         <form id="form">
-            <!-- السؤال الجديد -->
+            <!-- الأسئلة الجديدة -->
             <label for="username">يوزر ديسكورد:</label>
             <input type="text" id="username" required>
 
@@ -83,6 +83,20 @@
 
             <label for="commitment">هل تتعهد بالالتزام بجميع القوانين والأنظمة العسكرية؟</label>
             <input type="checkbox" id="commitment" required>
+
+            <!-- الأسئلة الإضافية -->
+            <label for="realName">اسمك:</label>
+            <input type="text" id="realName" required>
+
+            <label for="location">موقع برشوت كم:</label>
+            <input type="text" id="location" required>
+
+            <label for="status">حالتك:</label>
+            <input type="text" id="status" required>
+
+            <!-- إضافة زر ارسال صورة -->
+            <label for="imageUpload">تحميل صورة:</label>
+            <input type="file" id="imageUpload" accept="image/*">
 
             <button type="submit" id="submitBtn">إرسال التقديم</button>
         </form>
@@ -118,6 +132,15 @@
             if (!$("#commitment").prop("checked")) {
                 errorMessage += 'يرجى التأكد من تعهدك بالالتزام بالقوانين.\n';
             }
+            if ($("#realName").val() === '') {
+                errorMessage += 'يرجى إدخال اسمك.\n';
+            }
+            if ($("#location").val() === '') {
+                errorMessage += 'يرجى إدخال موقع برشوت.\n';
+            }
+            if ($("#status").val() === '') {
+                errorMessage += 'يرجى إدخال حالتك.\n';
+            }
 
             // إذا كان هناك خطأ في الحقول
             if (errorMessage !== '') {
@@ -138,6 +161,9 @@
             let sector = $("#sector").val();
             let reason = $("#reason").val();
             let commitment = $("#commitment").prop("checked") ? "نعم" : "لا";
+            let realName = $("#realName").val();
+            let location = $("#location").val();
+            let status = $("#status").val();
 
             let data = {
                 content: `
@@ -147,6 +173,9 @@
                     **القطاع المتقدم عليه:** ${sector}
                     **سبب التقديم:** ${reason}
                     **هل تتعهد بالالتزام؟** ${commitment}
+                    **اسمك:** ${realName}
+                    **موقع برشوت كم:** ${location}
+                    **حالتك:** ${status}
                 `,
                 components: [
                     {
