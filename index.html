@@ -1,213 +1,281 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج التقديم</title>
+    <title>نظام الدخول بالتوكن</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            padding: 20px;
-            background: linear-gradient(135deg, #f1f1f1, #dfe9f3);
+        * {
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        h2 {
-            color: #4CAF50;
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
         }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 30px auto;
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
-        input, button, textarea {
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        input {
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            transition: border 0.3s;
         }
+
+        input:focus {
+            border-color: #6a11cb;
+            outline: none;
+        }
+
         button {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
-        }
-        button:disabled {
-            background-color: #ddd;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
+            font-size: 16px;
             font-weight: bold;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
         }
-        p {
-            color: green;
-            font-size: 18px;
-            text-align: center;
+
+        button:hover {
+            transform: translateY(-2px);
         }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
         .error {
-            color: red;
-            font-size: 14px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .menu-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .menu-item h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .input-field {
+            margin-bottom: 10px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+
+        .leave-btn {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-
-    <h2>نموذج التقديم</h2>
-
-    <div class="container">
-        <form id="form" enctype="multipart/form-data">
-            <!-- الأسئلة الجديدة -->
-            <label for="username">يوزر ديسكورد:</label>
-            <input type="text" id="username" required>
-
-            <label for="name">الإسم الثلاثي:</label>
-            <input type="text" id="name" required>
-
-            <label for="age">العمر الحقيقي:</label>
-            <input type="number" id="age" required>
-
-            <label for="sector">القطاع المتقدم عليه:</label>
-            <input type="text" id="sector" required>
-
-            <label for="reason">سبب التقديم:</label>
-            <textarea id="reason" required></textarea>
-
-            <label for="commitment">هل تتعهد بالالتزام بجميع القوانين والأنظمة العسكرية؟</label>
-            <input type="checkbox" id="commitment" required>
-
-            <!-- الأسئلة الإضافية -->
-            <label for="realName">اسمك:</label>
-            <input type="text" id="realName" required>
-
-            <label for="location">موقع برشوت كم:</label>
-            <input type="text" id="location" required>
-
-            <label for="status">حالتك:</label>
-            <input type="text" id="status" required>
-
-            <!-- إضافة زر ارسال صورة -->
-            <label for="imageUpload">تحميل صورة:</label>
-            <input type="file" id="imageUpload" accept="image/*">
-
-            <button type="submit" id="submitBtn">إرسال التقديم</button>
-        </form>
-
-        <p id="responseMessage"></p>
-        <p class="error" id="errorMessage"></p>
+    <!-- شاشة إدخال التوكن -->
+    <div id="tokenPage" class="page active">
+        <div class="container">
+            <h2>أدخل التوكن للدخول</h2>
+            <form id="tokenForm">
+                <div class="form-group">
+                    <input type="text" id="tokenInput" placeholder="أدخل التوكن هنا" required>
+                </div>
+                <button type="submit">دخول</button>
+            </form>
+            <div id="tokenMessage" class="message"></div>
+        </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        let cooldown = false;
-
-        $("#form").submit(function(event) {
-            event.preventDefault();
+    <!-- القائمة الرئيسية -->
+    <div id="mainMenu" class="page">
+        <div class="container">
+            <h2>القائمة الرئيسية</h2>
             
-            // حذف الرسالة القديمة إذا كانت موجودة
-            $("#responseMessage").text('');
-            $("#errorMessage").text('');
+            <div class="menu-buttons">
+                <!-- زر إرسال رسالة -->
+                <div class="menu-item">
+                    <h3>إرسال رسالة للروم</h3>
+                    <input type="text" id="roomId" placeholder="أدخل ID الروم" class="input-field">
+                    <input type="text" id="messageText" placeholder="اكتب رسالتك هنا" class="input-field">
+                    <button onclick="sendMessage()" class="action-btn">إرسال الرسالة</button>
+                </div>
 
-            // التحقق من أن جميع الحقول تم تعبئتها
-            let errorMessage = '';
-            if ($("#username").val() === '') {
-                errorMessage += 'يرجى إدخال يوزر ديسكورد.\n';
-            }
-            if ($("#name").val() === '') {
-                errorMessage += 'يرجى إدخال الإسم الثلاثي.\n';
-            }
-            if ($("#age").val() === '') {
-                errorMessage += 'يرجى إدخال العمر الحقيقي.\n';
-            }
-            if ($("#sector").val() === '') {
-                errorMessage += 'يرجى إدخال القطاع المتقدم عليه.\n';
-            }
-            if ($("#reason").val() === '') {
-                errorMessage += 'يرجى إدخال سبب التقديم.\n';
-            }
-            if (!$("#commitment").prop("checked")) {
-                errorMessage += 'يرجى التأكد من تعهدك بالالتزام بالقوانين.\n';
-            }
-            if ($("#realName").val() === '') {
-                errorMessage += 'يرجى إدخال اسمك.\n';
-            }
-            if ($("#location").val() === '') {
-                errorMessage += 'يرجى إدخال موقع برشوت.\n';
-            }
-            if ($("#status").val() === '') {
-                errorMessage += 'يرجى إدخال حالتك.\n';
-            }
+                <!-- زر الدخول الصوتي -->
+                <div class="menu-item">
+                    <h3>الدخول للروم الصوتي</h3>
+                    <input type="text" id="voiceRoomId" placeholder="أدخل ID روم الصوتي" class="input-field">
+                    <button onclick="joinVoiceRoom()" class="action-btn">دخول الروم الصوتي</button>
+                    <button onclick="leaveVoiceRoom()" class="action-btn leave-btn">خروج من الروم</button>
+                </div>
 
-            // إذا كان هناك خطأ في الحقول
-            if (errorMessage !== '') {
-                $("#errorMessage").text(errorMessage.replace(/\n/g, '<br>'));
-                return;
+                <!-- زر تسجيل الخروج -->
+                <div class="menu-item">
+                    <button onclick="logout()" class="logout-btn">تسجيل الخروج</button>
+                </div>
+            </div>
+
+            <div id="statusMessage" class="status-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // التحقق من التوكن والانتقال للقائمة
+        document.getElementById('tokenForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const token = document.getElementById('tokenInput').value.trim();
+            
+            if (token) {
+                // هنا يمكنك إضافة التحقق من صحة التوكن مع السيرفر
+                // في هذا المثال، سنفترض أن أي توكن صحيح
+                showMainMenu();
             } else {
-                $("#errorMessage").text('');
+                showMessage('tokenMessage', 'يرجى إدخال التوكن', 'error');
             }
+        });
 
-            if (cooldown) {
-                alert("تم الإرسال بالفعل! يرجى الانتظار 10 ثواني.");
+        // إظهار القائمة الرئيسية
+        function showMainMenu() {
+            document.getElementById('tokenPage').classList.remove('active');
+            document.getElementById('mainMenu').classList.add('active');
+            showStatus('تم الدخول بنجاح!', 'success');
+        }
+
+        // إرسال رسالة
+        function sendMessage() {
+            const roomId = document.getElementById('roomId').value.trim();
+            const message = document.getElementById('messageText').value.trim();
+            
+            if (!roomId || !message) {
+                showStatus('يرجى إدخال ID الروم والرسالة', 'error');
                 return;
             }
+            
+            // هنا يمكنك إضافة كود إرسال الرسالة للسيرفر
+            showStatus(`تم إرسال الرسالة "${message}" إلى الروم ${roomId}`, 'success');
+            
+            // تفريغ الحقول بعد الإرسال
+            document.getElementById('roomId').value = '';
+            document.getElementById('messageText').value = '';
+        }
 
-            let username = $("#username").val();
-            let name = $("#name").val();
-            let age = $("#age").val();
-            let sector = $("#sector").val();
-            let reason = $("#reason").val();
-            let commitment = $("#commitment").prop("checked") ? "نعم" : "لا";
-            let realName = $("#realName").val();
-            let location = $("#location").val();
-            let status = $("#status").val();
-            let imageFile = $("#imageUpload")[0].files[0];  // الحصول على الصورة التي تم تحميلها
-
-            let formData = new FormData();
-            formData.append('username', username);
-            formData.append('name', name);
-            formData.append('age', age);
-            formData.append('sector', sector);
-            formData.append('reason', reason);
-            formData.append('commitment', commitment);
-            formData.append('realName', realName);
-            formData.append('location', location);
-            formData.append('status', status);
-            if (imageFile) {
-                formData.append('image', imageFile);  // إضافة الصورة إلى البيانات
+        // الدخول للروم الصوتي
+        function joinVoiceRoom() {
+            const voiceRoomId = document.getElementById('voiceRoomId').value.trim();
+            
+            if (!voiceRoomId) {
+                showStatus('يرجى إدخال ID روم الصوتي', 'error');
+                return;
             }
+            
+            // هنا يمكنك إضافة كود الدخول للروم الصوتي
+            showStatus(`تم الدخول إلى الروم الصوتي ${voiceRoomId}`, 'success');
+        }
 
-            // إرسال البيانات إلى Webhook باستخدام FormData
-            $.ajax({
-                url: "https://discord.com/api/webhooks/1430659853671731410/JZXvhhUJFRU8ZDtjh9bu4QH_caBd4ysTHRKZ60XLpPEzwUdSP6dwBKIdGHnh7wU5Ebr1",
-                type: "POST",
-                processData: false,  // لا نقوم بمعالجة البيانات
-                contentType: false,  // لا نقوم بتحديد نوع المحتوى (سيتم تحديده تلقائيًا)
-                data: formData,
-                success: function(response) {
-                    $("#responseMessage").text("تم إرسال التقديم بنجاح!");
-                    $("#submitBtn").prop("disabled", true);  // تعطيل الزر
-                    cooldown = true;
+        // الخروج من الروم الصوتي
+        function leaveVoiceRoom() {
+            // هنا يمكنك إضافة كود الخروج من الروم الصوتي
+            showStatus('تم الخروج من الروم الصوتي', 'success');
+        }
 
-                    // تعيين الكول داون لمدة 10 ثواني
-                    setTimeout(function() {
-                        cooldown = false;
-                        $("#submitBtn").prop("disabled", false);  // إعادة تفعيل الزر
-                    }, 10000);  // 10 ثواني
-                },
-                error: function() {
-                    $("#responseMessage").text("حدث خطأ أثناء إرسال البيانات.");
-                }
-            });
-        });
+        // تسجيل الخروج
+        function logout() {
+            document.getElementById('mainMenu').classList.remove('active');
+            document.getElementById('tokenPage').classList.add('active');
+            document.getElementById('tokenInput').value = '';
+            showMessage('tokenMessage', 'تم تسجيل الخروج بنجاح', 'success');
+        }
+
+        // وظائف مساعدة لعرض الرسائل
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        function showStatus(message, type) {
+            const element = document.getElementById('statusMessage');
+            element.textContent = message;
+            element.className = `status-message ${type}`;
+            
+            setTimeout(() => {
+                element.textContent = '';
+                element.className = 'status-message';
+            }, 3000);
+        }
     </script>
-
 </body>
 </html>
